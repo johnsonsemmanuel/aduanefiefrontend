@@ -7,6 +7,7 @@ import { useQuery } from "react-query";
 import useLocale from "hooks/useLocale";
 import shopService from "services/shop";
 import qs from "qs";
+import { IShop } from "interfaces";
 import Image from "next/image";
 
 interface Props {
@@ -40,7 +41,7 @@ export default function AsyncBranchListForm({ handleSubmit, branchId }: Props) {
       <div className={cls.wrapper}>
         <div className={cls.body}>
           {!isLoading
-            ? data?.data.map((item) => (
+            ? data?.data.map((item: IShop) => (
                 <div key={item.id} className={cls.row}>
                   <RadioInput {...controlProps(String(item.id))} />
                   <label className={cls.label} htmlFor={String(item.id)}>
