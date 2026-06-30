@@ -4,26 +4,25 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
 });
 const nextConfig = {
   reactStrictMode: false,
-  swcMinify: true,
   typescript: {
     ignoreBuildErrors: false,
   },
   images: {
     remotePatterns: [
       {
-        protocol: process.env.NEXT_PUBLIC_PROTOCOL,
-        hostname: process.env.NEXT_PUBLIC_API_HOSTNAME,
+        protocol: "https",
+        hostname: process.env.NEXT_PUBLIC_API_HOSTNAME || "api.aduanefie.org",
       },
       {
-        protocol: process.env.NEXT_PUBLIC_PROTOCOL,
-        hostname: process.env.NEXT_PUBLIC_STORAGE_HOSTNAME,
+        protocol: "https",
+        hostname: process.env.NEXT_PUBLIC_STORAGE_HOSTNAME || "aduanefie.s3.amazonaws.com",
       },
       {
-        protocol: process.env.NEXT_PUBLIC_PROTOCOL,
+        protocol: "https",
         hostname: "demo-api.aduanefie.org",
       },
       {
-        protocol: process.env.NEXT_PUBLIC_PROTOCOL,
+        protocol: "https",
         hostname: "lh3.googleusercontent.com",
       },
     ],
