@@ -1,33 +1,33 @@
 import { useReducer } from "react";
-import {  FarmContext } from "./farm.context";
+import { FarmContext } from "./farm.context";
 import { removePackerie, setPackerie } from "utils/session";
 import { IShop } from "interfaces";
 import useShopWorkingSchedule from "hooks/useShopWorkingSchedule";
 
-enum  FarmActionKind {
-  UPDATE = "UPDATE_RESTAURANT",
-  RESET = "RESET_RESTAURANT",
+enum FarmActionKind {
+  UPDATE = "UPDATE_FARM",
+  RESET = "RESET_FARM",
 }
 
-interface  FarmAction {
-  type:  FarmActionKind;
+interface FarmAction {
+  type: FarmActionKind;
   payload?: any;
 }
 
-interface  FarmState {
+interface FarmState {
   farm?: IShop;
 }
 
-function reducer(state:  FarmState, action:  FarmAction) {
+function reducer(state: FarmState, action: FarmAction) {
   const { type, payload } = action;
   switch (type) {
-    case  FarmActionKind.UPDATE:
+    case FarmActionKind.UPDATE:
       setPackerie("farm", JSON.stringify(payload));
       return {
         ...state,
         farm: payload,
       };
-    case  FarmActionKind.RESET:
+    case FarmActionKind.RESET:
       removePackerie("farm");
       return {};
     default:
@@ -40,7 +40,7 @@ type Props = {
   farmState?: IShop;
 };
 
-export function  FarmProvider({ children, farmState }: Props) {
+export function FarmProvider({ children, farmState }: Props) {
   const [state, dispatch] = useReducer(reducer, {
     farm: farmState,
   });
@@ -49,26 +49,26 @@ export function  FarmProvider({ children, farmState }: Props) {
     state.farm
   );
 
-  function update Farm(data?: IShop) {
-    dispatch({ type:  FarmActionKind.UPDATE, payload: data });
+  function updateFarm(data?: IShop) {
+    dispatch({ type: FarmActionKind.UPDATE, payload: data });
   }
 
-  function reset Farm() {
-    dispatch({ type:  FarmActionKind.RESET, payload: null });
+  function resetFarm() {
+    dispatch({ type: FarmActionKind.RESET, payload: null });
   }
 
   return (
-    < FarmContext.Provider
+    <FarmContext.Provider
       value={{
         farm: state?.farm,
-        update Farm,
-        reset Farm,
+        updateFarm,
+        resetFarm,
         workingSchedule,
         isShopClosed,
         isOpen,
       }}
     >
       {children}
-    </ FarmContext.Provider>
+    </FarmContext.Provider>
   );
 }

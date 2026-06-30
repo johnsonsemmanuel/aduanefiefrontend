@@ -9,7 +9,7 @@ import SecondaryButton from "components/button/secondaryButton";
 import { useRouter } from "next/router";
 import { useQuery } from "react-query";
 import bookingService from "services/booking";
-import { use Farm } from "contexts/farm/farm.context";
+import { useFarm } from "contexts/farm/farm.context";
 import getFirstReservationDate from "utils/getFirstReservationDate";
 import RcShopSelect from "components/pickers/rcShopSelect";
 import { IShop } from "interfaces";
@@ -27,7 +27,7 @@ interface formValues {
 export default function ReservationFind({ handleClose }: Props) {
   const { t, locale } = useLocale();
   const { push } = useRouter();
-  const { farm } = use Farm();
+  const { farm } = useFarm();
   const searchAndSelectRef = useRef(null);
   const [selectedShop, setSelectedShop] = useState<IShop | undefined>();
 
