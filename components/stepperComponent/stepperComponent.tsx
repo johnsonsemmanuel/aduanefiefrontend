@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import CheckDoubleFillIcon from "remixicon-react/CheckDoubleFillIcon";
-import FarmFillIcon from "remixicon-react/FarmFillIcon";
+import StoreFillIcon from "remixicon-react/StoreFillIcon";
 import RunFillIcon from "remixicon-react/RunFillIcon";
 import FlagFillIcon from "remixicon-react/FlagFillIcon";
 
@@ -85,7 +85,7 @@ function ColorlibStepIcon(props: StepIconProps) {
 
   const icons: { [index: string]: React.ReactElement<any> } = {
     1: <CheckDoubleFillIcon />,
-    2: <FarmFillIcon />,
+    2: <StoreFillIcon />,
     3: <RunFillIcon />,
     4: <FlagFillIcon />,
   };

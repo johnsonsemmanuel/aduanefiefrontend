@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import cls from "./footerMenu.module.scss";
-import FarmFillIcon from "remixicon-react/FarmFillIcon";
+import StoreFillIcon from "remixicon-react/StoreFillIcon";
 import HistoryFillIcon from "remixicon-react/HistoryFillIcon";
 import HeartLineIcon from "remixicon-react/HeartLineIcon";
 import { useTranslation } from "react-i18next";
@@ -42,7 +42,7 @@ export default function FooterMenu({}: Props) {
                     pathname === "/" ? cls.active : ""
                   }`}
                 >
-                  <FarmFillIcon />
+                  <StoreFillIcon />
                   <span className={cls.text}>{t("produces")}</span>
                 </Link>
               </li>

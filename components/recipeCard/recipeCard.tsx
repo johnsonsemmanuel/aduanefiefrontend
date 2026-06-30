@@ -6,7 +6,7 @@ import getImage from "utils/getImage";
 import FallbackImage from "components/fallbackImage/fallbackImage";
 import { IRecipe } from "interfaces/recipe.interface";
 import TimeFillIcon from "remixicon-react/TimeFillIcon";
-import FarmFillIcon from "remixicon-react/FarmFillIcon";
+import StoreFillIcon from "remixicon-react/StoreFillIcon";
 import ShopLogoBackground from "components/shopLogoBackground/shopLogoBackground";
 import { useAppSelector } from "hooks/useRedux";
 import { selectCurrency } from "redux/slices/currency";
@@ -45,7 +45,7 @@ export default function RecipeCard({ data }: Props) {
         </div>
         <span className={cls.dot} />
         <div className={cls.flex}>
-          <FarmFillIcon />
+          <StoreFillIcon />
           <span className={cls.text}>
             {data.calories} {t("kkl")}
           </span>
