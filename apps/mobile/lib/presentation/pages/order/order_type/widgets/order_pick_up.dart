@@ -1,0 +1,151 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:aduanefie/application/order/order_provider.dart';
+import 'package:aduanefie/app_constants.dart';
+import 'package:aduanefie/infrastructure/services/services.dart';
+import 'package:aduanefie/presentation/app_assets.dart';
+import 'package:aduanefie/presentation/theme/app_style.dart';
+import 'package:aduanefie/presentation/theme/color_set.dart';
+import 'order_container.dart';
+
+import 'package:aduanefie/presentation/components/components.dart';
+
+class OrderPickUp extends ConsumerStatefulWidget {
+  final CustomColorSet colors;
+  const OrderPickUp({super.key, required this.colors});
+
+  @override
+  ConsumerState<OrderPickUp> createState() => _OrderPickUpState();
+}
+
+class _OrderPickUpState extends ConsumerState<OrderPickUp> {
+  @override
+  build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(top: 24.h),
+      child: Column(
+        children: [
+          Consumer(
+            builder: (context, ref, child) {
+              return OrderContainer(
+                colors: widget.colors,
+                onTap: () {
+                  if (ref.watch(orderProvider).branches?.isNotEmpty ?? false) {
+                    AppHelpers.showCustomModalBottomSheet(
+                      context: context,
+                      modal: Container(
+                        decoration: BoxDecoration(
+                          color: AppStyle.white,
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(24.r),
+                            topLeft: Radius.circular(24.r),
+                          ),
+                        ),
+                        child: Column(
+                          children: [
+                            24.verticalSpace,
+                            TitleAndIcon(
+                              title: AppHelpers.getTranslation(TrKeys.branches),
+                            ),
+                            16.verticalSpace,
+                            Expanded(
+                              child: Consumer(
+                                builder: (context, ref, child) {
+                                  return ListView.builder(
+                                    itemBuilder: (context, index) {
+                                      return SelectItem(
+                                        onTap: () {
+                                          ref
+                                              .read(orderProvider.notifier)
+                                              .changeBranch(index);
+                                        },
+                                        isActive:
+                                            ref
+                                                .watch(orderProvider)
+                                                .branchIndex ==
+                                            index,
+                                        desc:
+                                            ref
+                                                .watch(orderProvider)
+                                                .branches?[index]
+                                                .address
+                                                ?.address ??
+                                            "",
+                                        title:
+                                            ref
+                                                .watch(orderProvider)
+                                                .branches?[index]
+                                                .translation
+                                                ?.title ??
+                                            "",
+                                      );
+                                    },
+                                    itemCount:
+                                        ref
+                                            .watch(orderProvider)
+                                            .branches
+                                            ?.length ??
+                                        0,
+                                    shrinkWrap: true,
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      isDarkMode: false,
+                    );
+                  }
+                },
+                icon: Padding(
+                  padding: EdgeInsets.only(left: 4.w),
+                  child: SvgPicture.asset(
+                    Assets.svgsAdress,
+                    width: 20.w,
+                    height: 20.h,
+                  ),
+                ),
+                title: AppHelpers.getTranslation(TrKeys.deliveryAddress),
+                description:
+                    ref.watch(orderProvider).shopData?.translation?.address ??
+                    '',
+              );
+            },
+          ),
+          10.verticalSpace,
+          Consumer(
+            builder: (context, ref, child) {
+              return ClipRRect(
+                borderRadius: BorderRadius.circular(10.r),
+                child: SizedBox(
+                  height: 300.r,
+                  width: double.infinity,
+                  child: GoogleMap(
+                    padding: REdgeInsets.only(bottom: 12, left: 4),
+                    myLocationButtonEnabled: false,
+                    markers: ref.watch(orderProvider).shopMarkers,
+                    initialCameraPosition: CameraPosition(
+                      target: LatLng(
+                        ref.read(orderProvider).shopData?.location?.latitude ??
+                            AppConstants.demoLatitude,
+                        ref.read(orderProvider).shopData?.location?.longitude ??
+                            AppConstants.demoLongitude,
+                      ),
+                      zoom: 14,
+                    ),
+                    mapToolbarEnabled: false,
+                    zoomControlsEnabled: false,
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}

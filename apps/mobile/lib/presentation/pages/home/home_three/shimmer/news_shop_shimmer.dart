@@ -1,0 +1,49 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+
+import 'package:aduanefie/infrastructure/services/services.dart';
+import 'market_shimmer_three.dart';
+
+import 'package:aduanefie/presentation/components/components.dart';
+
+class NewsShopShimmer extends StatelessWidget {
+  final String title;
+
+  const NewsShopShimmer({super.key, required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        TitleAndIcon(
+          rightTitle: AppHelpers.getTranslation(TrKeys.seeAll),
+          isIcon: true,
+          title: title,
+          onRightTap: () {},
+        ),
+        12.verticalSpace,
+        SizedBox(
+          height: 246.h,
+          child: AnimationLimiter(
+            child: ListView.builder(
+              shrinkWrap: false,
+
+              scrollDirection: Axis.horizontal,
+              itemCount: 4,
+              itemBuilder: (context, index) =>
+                  AnimationConfiguration.staggeredList(
+                    position: index,
+                    duration: const Duration(milliseconds: 375),
+                    child: const SlideAnimation(
+                      verticalOffset: 50.0,
+                      child: FadeInAnimation(child: MarketShimmerThree()),
+                    ),
+                  ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}

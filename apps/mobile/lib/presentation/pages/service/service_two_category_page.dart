@@ -1,0 +1,81 @@
+
+
+import 'package:auto_route/auto_route.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:aduanefie/presentation/theme/theme_wrapper.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:aduanefie/application/home/home_provider.dart';
+import 'package:aduanefie/presentation/theme/app_style.dart';
+
+import 'filter_category_service.dart';
+
+import 'package:aduanefie/presentation/components/components.dart';
+
+@RoutePage()
+class ServiceTwoCategoryPage extends ConsumerStatefulWidget {
+  final int index;
+
+  const ServiceTwoCategoryPage({super.key, required this.index});
+
+  @override
+  ConsumerState<ServiceTwoCategoryPage> createState() =>
+      _ServiceTwoCategoryPageState();
+}
+
+class _ServiceTwoCategoryPageState
+    extends ConsumerState<ServiceTwoCategoryPage> {
+  final RefreshController _farmController = RefreshController();
+
+  @override
+  void dispose() {
+    _farmController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final state = ref.watch(homeProvider);
+    final notifier = ref.read(homeProvider.notifier);
+    final title = state.selectIndexCategory != -1
+        ? state.categories[state.selectIndexCategory].translation?.title
+        : "";
+    return WillPopScope(
+      onWillPop: () {
+        notifier.setSelectCategory(-1, context);
+        // context.maybePop();
+        return Future.value(true);
+      },
+      child: ThemeWrapper(
+        builder: (colors, theme) {
+          return Scaffold(
+            body: Column(
+              children: [
+                CommonAppBar(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(title ?? "", style: AppStyle.interNormal(size: 18)),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: FilterCategoryService(
+                    state: state,
+                    event: notifier,
+                    colors: colors,
+                    categoryIndex: widget.index,
+                    farmController: _farmController,
+                  ),
+                ),
+              ],
+            ),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.startFloat,
+            floatingActionButton: const PopButton(),
+          );
+        },
+      ),
+    );
+  }
+}

@@ -1,0 +1,14 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:aduanefie/infrastructure/models/models.dart';
+
+part 'like_state.freezed.dart';
+
+@freezed
+abstract class LikeState with _$LikeState {
+  const factory LikeState({
+    @Default(true) bool isShopLoading,
+    @Default([]) List<ShopData> shops,
+  }) = _LikeState;
+
+  const LikeState._();
+}

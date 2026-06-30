@@ -1,0 +1,443 @@
+import 'package:auto_route/auto_route.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:aduanefie/presentation/pages/home/shimmer/news_shop_shimmer.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:aduanefie/application/currency/currency_provider.dart';
+import 'package:aduanefie/application/home/home_notifier.dart';
+import 'package:aduanefie/application/home/home_provider.dart';
+import 'package:aduanefie/application/home/home_state.dart';
+import 'package:aduanefie/application/map/view_map_provider.dart';
+import 'package:aduanefie/application/profile/profile_provider.dart';
+import 'package:aduanefie/application/shop_order/shop_order_provider.dart';
+import 'package:aduanefie/infrastructure/services/services.dart';
+import 'package:aduanefie/presentation/app_assets.dart';
+import 'package:aduanefie/presentation/pages/home/shimmer/all_shop_shimmer.dart';
+import 'package:aduanefie/presentation/pages/home/shimmer/recommend_shop_shimmer.dart';
+import 'package:aduanefie/presentation/pages/home/home_one/category_one.dart';
+import 'package:aduanefie/presentation/pages/home/home_one/widget/banner_one_item.dart';
+import 'package:aduanefie/presentation/routes/app_router.dart';
+import 'package:aduanefie/presentation/theme/app_style.dart';
+
+import 'app_bar_one.dart';
+import 'filter_category_one_shop.dart';
+import 'widget/banner_one_shimmer.dart';
+import 'widget/door_to_door.dart';
+import 'widget/market_one_item.dart';
+import 'widget/recommended_one_item.dart';
+import 'widget/shop_bar_one_item.dart';
+
+import 'package:aduanefie/presentation/components/components.dart';
+
+class HomeOnePage extends ConsumerStatefulWidget {
+  const HomeOnePage({super.key});
+
+  @override
+  ConsumerState<HomeOnePage> createState() => _HomeOnePageState();
+}
+
+class _HomeOnePageState extends ConsumerState<HomeOnePage> {
+  late HomeNotifier event;
+  final RefreshController _bannerController = RefreshController();
+  final RefreshController _farmController = RefreshController();
+  final RefreshController _storyController = RefreshController();
+  final RefreshController _categoryController = RefreshController();
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(homeProvider.notifier)
+        ..setAddress()
+        ..fetchBanner(context)
+        ..fetchShopRecommend(context)
+        ..fetchShop(context)
+        ..fetchStore(context)
+        ..fetchFarm(context)
+        ..fetchFarmNew(context)
+        ..fetchAds(context)
+        ..fetchCategories(context);
+      ref.read(viewMapProvider.notifier).checkAddress(context);
+      ref.read(currencyProvider.notifier).fetchCurrency(context);
+      if (LocalStorage.getToken().isNotEmpty) {
+        ref.read(shopOrderProvider.notifier).getCart(context, () {});
+        ref.read(profileProvider.notifier).fetchUser(context);
+      }
+    });
+
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    event = ref.read(homeProvider.notifier);
+    super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    _bannerController.dispose();
+    _categoryController.dispose();
+    _farmController.dispose();
+    _storyController.dispose();
+    super.dispose();
+  }
+
+  void _onLoading() {
+    if (ref.watch(homeProvider).selectIndexCategory == -1) {
+      event.fetchFarmPage(context, _farmController);
+    } else {
+      event.fetchFilterFarm(context, controller: _farmController);
+    }
+  }
+
+  void _onRefresh() {
+    ref.watch(homeProvider).selectIndexCategory == -1
+        ? (event
+            ..fetchBannerPage(context, _farmController, isRefresh: true)
+            ..fetchFarmPage(
+              context,
+              _farmController,
+              isRefresh: true,
+            )
+            ..fetchCategoriesPage(
+              context,
+              _farmController,
+              isRefresh: true,
+            )
+            ..fetchStorePage(context, _farmController, isRefresh: true)
+            ..fetchShopPage(context, _farmController, isRefresh: true)
+            ..fetchAds(context)
+            ..fetchFarmPageNew(
+              context,
+              _farmController,
+              isRefresh: true,
+            )
+            ..fetchShopPageRecommend(
+              context,
+              _farmController,
+              isRefresh: true,
+            ))
+        : event.fetchFilterFarm(
+            context,
+            controller: _farmController,
+            isRefresh: true,
+          );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final state = ref.watch(homeProvider);
+    final bool isLtr = LocalStorage.getLangLtr();
+    return Directionality(
+      textDirection: isLtr ? TextDirection.ltr : TextDirection.rtl,
+      child: CustomScaffold(
+        body: (colors) => Column(
+          children: [
+            AppBarOne(state: state, event: event, colors: colors),
+            Expanded(
+              child: SmartRefresher(
+                enablePullDown: true,
+                enablePullUp: true,
+                physics: const BouncingScrollPhysics(),
+                controller: _farmController,
+                header: WaterDropMaterialHeader(
+                  distance: 160.h,
+                  backgroundColor: AppStyle.white,
+                  color: AppStyle.textGrey,
+                ),
+                onLoading: () => _onLoading(),
+                onRefresh: () => _onRefresh(),
+                child: ListView(
+                  shrinkWrap: true,
+                  padding: EdgeInsets.only(top: 24.r),
+                  children: [
+                    CategoryOne(
+                      colors: colors,
+                      state: state,
+                      event: event,
+                      categoryController: _categoryController,
+                      farmController: _farmController,
+                    ),
+                    state.selectIndexCategory == -1
+                        ? _body(state, context)
+                        : FilterCategoryOneShop(
+                            colors: colors,
+                            state: state,
+                            event: event,
+                            shopController: _farmController,
+                          ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _body(HomeState state, BuildContext context) {
+    return Column(
+      children: [
+        state.isBannerLoading
+            ? const BannerOneShimmer()
+            : Column(
+                children: [
+                  Container(
+                    height: state.banners.isNotEmpty ? 150.h : 0,
+                    margin: EdgeInsets.only(
+                      bottom: state.banners.isNotEmpty ? 30.h : 0,
+                    ),
+                    child: SmartRefresher(
+                      scrollDirection: Axis.horizontal,
+                      enablePullDown: false,
+                      enablePullUp: true,
+                      controller: _bannerController,
+                      onLoading: () async {
+                        await event.fetchBannerPage(context, _bannerController);
+                      },
+                      child: AnimationLimiter(
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: state.banners.length,
+                          padding: EdgeInsets.only(left: 16.w),
+                          itemBuilder: (context, index) =>
+                              AnimationConfiguration.staggeredList(
+                                position: index,
+                                duration: const Duration(milliseconds: 375),
+                                child: SlideAnimation(
+                                  verticalOffset: 50.0,
+                                  child: FadeInAnimation(
+                                    child: BannerOneItem(
+                                      banner: state.banners[index],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+        state.shops.isNotEmpty
+            ? Column(
+                children: [
+                  TitleAndIcon(
+                    rightTitle: AppHelpers.getTranslation(TrKeys.seeAll),
+                    isIcon: true,
+                    title: AppHelpers.getTranslation(TrKeys.favouriteBrand),
+                    onRightTap: () {
+                      context.pushRoute(RecommendedOneRoute(isShop: true));
+                    },
+                  ),
+                  12.verticalSpace,
+                  SizedBox(
+                    height: 126.r,
+                    child: AnimationLimiter(
+                      child: ListView.builder(
+                        padding: EdgeInsets.only(left: 16.r),
+
+                        scrollDirection: Axis.horizontal,
+                        itemCount: state.shops.length,
+                        itemBuilder: (context, index) =>
+                            AnimationConfiguration.staggeredList(
+                              position: index,
+                              duration: const Duration(milliseconds: 375),
+                              child: SlideAnimation(
+                                verticalOffset: 50.0,
+                                child: FadeInAnimation(
+                                  child: MarketOneItem(
+                                    isShop: true,
+                                    shop: state.shops[index],
+                                  ),
+                                ),
+                              ),
+                            ),
+                      ),
+                    ),
+                  ),
+                  16.verticalSpace,
+                ],
+              )
+            : const SizedBox.shrink(),
+        state.story?.isNotEmpty ?? false
+            ? Column(
+                children: [
+                  TitleAndIcon(
+                    isIcon: false,
+                    title: AppHelpers.getTranslation(TrKeys.stories),
+                  ),
+                  12.verticalSpace,
+                  SizedBox(
+                    height: 160.r,
+                    child: SmartRefresher(
+                      controller: _storyController,
+                      scrollDirection: Axis.horizontal,
+                      enablePullDown: false,
+                      enablePullUp: true,
+                      onLoading: () async {
+                        await event.fetchStorePage(context, _storyController);
+                      },
+                      child: AnimationLimiter(
+                        child: ListView.builder(
+                          shrinkWrap: true,
+
+                          scrollDirection: Axis.horizontal,
+                          itemCount: state.story?.length ?? 0,
+                          padding: EdgeInsets.only(left: 16.w),
+                          itemBuilder: (context, index) =>
+                              AnimationConfiguration.staggeredList(
+                                position: index,
+                                duration: const Duration(milliseconds: 375),
+                                child: SlideAnimation(
+                                  verticalOffset: 50.0,
+                                  child: FadeInAnimation(
+                                    child: ShopBarOneItem(
+                                      index: index,
+                                      controller: _storyController,
+                                      story: state.story?[index]?.first,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            : const SizedBox.shrink(),
+        if (AppHelpers.getParcel()) const DoorToDoor(),
+        state.isShopRecommendLoading
+            ? const RecommendShopShimmer()
+            : state.shopsRecommend.isNotEmpty
+            ? Column(
+                children: [
+                  TitleAndIcon(
+                    rightTitle: AppHelpers.getTranslation(TrKeys.seeAll),
+                    isIcon: true,
+                    title: AppHelpers.getTranslation(TrKeys.popularNearYou),
+                    onRightTap: () {
+                      context.pushRoute(RecommendedOneRoute());
+                    },
+                  ),
+                  12.verticalSpace,
+                  SizedBox(
+                    height: 170.h,
+                    child: AnimationLimiter(
+                      child: ListView.builder(
+                        shrinkWrap: false,
+
+                        scrollDirection: Axis.horizontal,
+                        padding: EdgeInsets.symmetric(horizontal: 16.w),
+                        itemCount: state.shopsRecommend.length,
+                        itemBuilder: (context, index) =>
+                            AnimationConfiguration.staggeredList(
+                              position: index,
+                              duration: const Duration(milliseconds: 375),
+                              child: SlideAnimation(
+                                verticalOffset: 50.0,
+                                child: FadeInAnimation(
+                                  child: RecommendedOneItem(
+                                    shop: state.shopsRecommend[index],
+                                  ),
+                                ),
+                              ),
+                            ),
+                      ),
+                    ),
+                  ),
+                  30.verticalSpace,
+                ],
+              )
+            : const SizedBox.shrink(),
+        state.isFarmNewLoading
+            ? NewsShopShimmer(
+                title: AppHelpers.getTranslation(TrKeys.newsOfWeek),
+              )
+            : state.newFarm.isNotEmpty
+            ? Column(
+                children: [
+                  TitleAndIcon(
+                    rightTitle: AppHelpers.getTranslation(TrKeys.seeAll),
+                    isIcon: true,
+                    title: AppHelpers.getTranslation(TrKeys.newsOfWeek),
+                    onRightTap: () {
+                      context.pushRoute(
+                        RecommendedOneRoute(isNewsOfPage: true),
+                      );
+                    },
+                  ),
+                  12.verticalSpace,
+                  SizedBox(
+                    height: 250.h,
+                    child: AnimationLimiter(
+                      child: ListView.builder(
+                        padding: EdgeInsets.only(left: 16.r),
+
+                        scrollDirection: Axis.horizontal,
+                        itemCount: state.newFarm.length,
+                        itemBuilder: (context, index) =>
+                            AnimationConfiguration.staggeredList(
+                              position: index,
+                              duration: const Duration(milliseconds: 375),
+                              child: SlideAnimation(
+                                verticalOffset: 50.0,
+                                child: FadeInAnimation(
+                                  child: MarketOneItem(
+                                    shop: state.newFarm[index],
+                                  ),
+                                ),
+                              ),
+                            ),
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            : const SizedBox.shrink(),
+        30.verticalSpace,
+        state.isFarmLoading
+            ? const AllShopShimmer()
+            : Column(
+                children: [
+                  TitleAndIcon(
+                    title: AppHelpers.getTranslation(TrKeys.allShops),
+                  ),
+                  state.farm.isNotEmpty
+                      ? AnimationLimiter(
+                          child: ListView.builder(
+                            padding: EdgeInsets.only(top: 6.h),
+                            shrinkWrap: true,
+
+                            physics: const NeverScrollableScrollPhysics(),
+                            scrollDirection: Axis.vertical,
+                            itemCount: state.farm.length,
+                            itemBuilder: (context, index) =>
+                                AnimationConfiguration.staggeredList(
+                                  position: index,
+                                  duration: const Duration(milliseconds: 375),
+                                  child: SlideAnimation(
+                                    verticalOffset: 50.0,
+                                    child: FadeInAnimation(
+                                      child: MarketOneItem(
+                                        shop: state.farm[index],
+                                        isSimpleShop: true,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                          ),
+                        )
+                      : SvgPicture.asset(Assets.svgsEmpty, height: 100.h),
+                ],
+              ),
+      ],
+    );
+  }
+}

@@ -1,0 +1,227 @@
+import 'package:auto_route/auto_route.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:aduanefie/application/home/home_provider.dart';
+import 'package:aduanefie/application/profile/profile_provider.dart';
+import 'package:aduanefie/infrastructure/models/data/address_old_data.dart';
+import 'package:aduanefie/infrastructure/models/data/location.dart';
+import 'package:aduanefie/infrastructure/services/services.dart';
+import 'package:aduanefie/presentation/routes/app_router.dart';
+
+import 'package:aduanefie/presentation/theme/app_style.dart';
+
+import 'package:aduanefie/presentation/components/components.dart';
+
+@RoutePage()
+class AddressListPage extends StatefulWidget {
+  const AddressListPage({super.key});
+
+  @override
+  State<AddressListPage> createState() => _AddressListPageState();
+}
+
+class _AddressListPageState extends State<AddressListPage> {
+  final bool isLtr = LocalStorage.getLangLtr();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer(
+      builder: (BuildContext context, WidgetRef ref, Widget? child) {
+        final state = ref.watch(profileProvider).userData?.addresses ?? [];
+        final event = ref.read(profileProvider.notifier);
+        return Directionality(
+          textDirection: isLtr ? TextDirection.ltr : TextDirection.rtl,
+          child: CustomScaffold(
+            body: (colors) => Column(
+              children: [
+                CommonAppBar(
+                  child: Text(
+                    AppHelpers.getTranslation(TrKeys.deliveryAddress),
+                    style: AppStyle.interNoSemi(
+                      size: 18,
+                      color: colors.textBlack,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    padding: EdgeInsets.only(
+                      left: 18.r,
+                      right: 18.r,
+                      bottom: 72.r,
+                      top: 24.r,
+                    ),
+                    itemCount: state.length,
+                    itemBuilder: (context, index) {
+                      return SelectAddressItem(
+                        onTap: () {
+                          event.change(index);
+                        },
+                        isActive:
+                            ref.watch(profileProvider).selectAddress == index,
+                        address: state[index],
+                        update: () async {
+                          await context.pushRoute(
+                            ViewMapRoute(
+                              address: ref
+                                  .watch(profileProvider)
+                                  .userData
+                                  ?.addresses?[index],
+                              indexAddress: index,
+                            ),
+                          );
+                          if (context.mounted) {
+                            ref
+                                .read(profileProvider.notifier)
+                                .fetchUser(
+                                  context,
+                                  onSuccess: () {
+                                    ref
+                                        .read(profileProvider.notifier)
+                                        .findSelectIndex();
+                                  },
+                                );
+                          }
+                        },
+                        colors: colors,
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerFloat,
+            floatingActionButton: (colors) => Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              child: Row(
+                children: [
+                  PopButton(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  24.horizontalSpace,
+                  Expanded(
+                    child: CustomButton(
+                      title: AppHelpers.getTranslation(TrKeys.addAddress),
+                      onPressed: () {
+                        context.pushRoute(ViewMapRoute());
+                      },
+                    ),
+                  ),
+                  24.horizontalSpace,
+                  Expanded(
+                    child: CustomButton(
+                      title: AppHelpers.getTranslation(TrKeys.save),
+                      onPressed: () {
+                        ref
+                            .read(profileProvider.notifier)
+                            .setActiveAddress(
+                              index: ref.watch(profileProvider).selectAddress,
+                              id: ref
+                                  .watch(profileProvider)
+                                  .userData
+                                  ?.addresses?[ref
+                                      .watch(profileProvider)
+                                      .selectAddress]
+                                  .id,
+                            );
+                        LocalStorage.setAddressSelected(
+                          AddressData(
+                            title:
+                                ref
+                                    .watch(profileProvider)
+                                    .userData
+                                    ?.addresses?[ref
+                                        .watch(profileProvider)
+                                        .selectAddress]
+                                    .title ??
+                                "",
+                            address:
+                                ref
+                                    .watch(profileProvider)
+                                    .userData
+                                    ?.addresses?[ref
+                                        .watch(profileProvider)
+                                        .selectAddress]
+                                    .address
+                                    ?.address ??
+                                "",
+                            location: LocationModel(
+                              longitude: ref
+                                  .watch(profileProvider)
+                                  .userData
+                                  ?.addresses?[ref
+                                      .watch(profileProvider)
+                                      .selectAddress]
+                                  .location
+                                  ?.last,
+                              latitude: ref
+                                  .watch(profileProvider)
+                                  .userData
+                                  ?.addresses?[ref
+                                      .watch(profileProvider)
+                                      .selectAddress]
+                                  .location
+                                  ?.first,
+                            ),
+                          ),
+                        );
+                        ref.read(homeProvider.notifier)
+                          ..fetchBannerPage(
+                            context,
+                            RefreshController(),
+                            isRefresh: true,
+                          )
+                          ..fetchFarmPage(
+                            context,
+                            RefreshController(),
+                            isRefresh: true,
+                          )
+                          ..fetchShopPageRecommend(
+                            context,
+                            RefreshController(),
+                            isRefresh: true,
+                          )
+                          ..fetchShopPage(
+                            context,
+                            RefreshController(),
+                            isRefresh: true,
+                          )
+                          ..fetchStorePage(
+                            context,
+                            RefreshController(),
+                            isRefresh: true,
+                          )
+                          ..fetchFarmPageNew(
+                            context,
+                            RefreshController(),
+                            isRefresh: true,
+                          )
+                          ..fetchCategoriesPage(
+                            context,
+                            RefreshController(),
+                            isRefresh: true,
+                          )
+                          ..setAddress();
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}

@@ -1,0 +1,56 @@
+# Dependencies
+node_modules/
+vendor/
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# Build outputs
+dist/
+build/
+.next/
+out/
+public/build/
+
+# Environment
+.env
+.env.*
+!.env.example
+!.env.template
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Laravel
+storage/
+bootstrap/cache/
+*.sql
+*.log
+
+# Flutter
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub/
+build/
+*.iml
+
+# Misc
+*.log
+*.zip
+*.tar.gz
+*.tgz
+.cache/
+coverage/
+.nyc_output/
