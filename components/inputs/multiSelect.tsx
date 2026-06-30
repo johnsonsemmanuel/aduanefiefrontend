@@ -98,7 +98,7 @@ export default function MultiSelect({ options, ...props }: Props) {
       </Label>
       <SelectMenu
         multiple
-        input={<Input id="category" placeholder={t("choose.here")} fullWidth />} //@ts-expect-error
+        input={<Input id="category" placeholder={t("choose.here")} fullWidth />}
         renderValue={(selected: number[]): ReactNode => (
           <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
             {selected.map((value) => (
