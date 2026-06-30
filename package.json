@@ -5,8 +5,7 @@
   "workspaces": [
     "apps/admin",
     "apps/website",
-    "apps/qr-code",
-    "backend"
+    "apps/qr-code"
   ],
   "scripts": {
     "dev": "turbo run dev",
