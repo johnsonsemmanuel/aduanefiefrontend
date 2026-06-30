@@ -76,7 +76,7 @@ export default function Homev1() {
   } = useInfiniteQuery(
     ["farms", category_id, locale, order_by, group, location, newest],
     ({ pageParam = 1 }) =>
-      shopService.getAll Farms(
+      shopService.getAllFarms(
         qs.stringify({
           page: pageParam,
           perPage: PER_PAGE,
