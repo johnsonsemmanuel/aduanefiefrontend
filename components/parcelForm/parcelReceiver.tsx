@@ -109,7 +109,7 @@ export default function ParcelReceiverForm({
             value={phone_to}
             onChange={formik.handleChange}
             placeholder={t("type.here")}
-            error={!!formik.errors.phone_to && formik.touched.phone_to}
+            error={!!(formik.errors.phone_to && formik.touched.phone_to)}
           />
         </Grid>
         <Grid item xs={12} md={5}>
@@ -119,7 +119,7 @@ export default function ParcelReceiverForm({
             value={username_to}
             onChange={formik.handleChange}
             placeholder={t("type.here")}
-            error={!!formik.errors.username_to && formik.touched.username_to}
+            error={!!(formik.errors.username_to && formik.touched.username_to)}
           />
         </Grid>
         <Grid item xs={12} md={5}>
@@ -129,7 +129,7 @@ export default function ParcelReceiverForm({
             value={formik.values.house_to}
             onChange={formik.handleChange}
             placeholder={t("type.here")}
-            error={!!formik.errors.house_to && formik.touched.house_to}
+            error={!!(formik.errors.house_to && formik.touched.house_to)}
           />
         </Grid>
         <Grid item xs={12} md={5}>
@@ -139,7 +139,7 @@ export default function ParcelReceiverForm({
             value={formik.values.stage_to}
             onChange={formik.handleChange}
             placeholder={t("type.here")}
-            error={!!formik.errors.stage_to && formik.touched.stage_to}
+            error={!!(formik.errors.stage_to && formik.touched.stage_to)}
           />
         </Grid>
         <Grid item xs={12} md={5}>
@@ -149,7 +149,7 @@ export default function ParcelReceiverForm({
             value={formik.values.room_to}
             onChange={formik.handleChange}
             placeholder={t("type.here")}
-            error={!!formik.errors.room_to && formik.touched.room_to}
+            error={!!(formik.errors.room_to && formik.touched.room_to)}
           />
         </Grid>
         <Grid item xs={12}>
@@ -159,7 +159,7 @@ export default function ParcelReceiverForm({
             value={formik.values.instructions}
             onChange={formik.handleChange}
             placeholder={t("type.here")}
-            error={!!formik.errors.instructions && formik.touched.instructions}
+            error={!!(formik.errors.instructions && formik.touched.instructions)}
           />
         </Grid>
         <Grid item xs={12} md={8}>
@@ -171,7 +171,7 @@ export default function ParcelReceiverForm({
             value={formik.values.description}
             onChange={formik.handleChange}
             placeholder={t("what.are.you.sending")}
-            error={!!formik.errors.description && formik.touched.description}
+            error={!!(formik.errors.description && formik.touched.description)}
           />
         </Grid>
         {selectedType?.options?.length !== 0 && (
@@ -211,7 +211,7 @@ export default function ParcelReceiverForm({
             value={formik.values.qr_value}
             onChange={formik.handleChange}
             placeholder={t("item.value.qr")}
-            error={!!formik.errors.qr_value && formik.touched.qr_value}
+            error={!!(formik.errors.qr_value && formik.touched.qr_value)}
           />
         </Grid>
         <Grid item xs={12} md={8}>

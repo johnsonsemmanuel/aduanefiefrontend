@@ -144,7 +144,7 @@ export default function RegisterForm({ onSuccess, changeView }: Props) {
           placeholder={t("type.here")}
           value={formik.values.email}
           onChange={formik.handleChange}
-          error={!!formik.errors.email && formik.touched.email}
+          error={!!(formik.errors.email && formik.touched.email)}
         />
       ) : (
         <div className={cls.phone}>

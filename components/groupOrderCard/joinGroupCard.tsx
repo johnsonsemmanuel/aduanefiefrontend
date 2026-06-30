@@ -76,7 +76,7 @@ export default function JoinGroupCard({ handleClose }: Props) {
             placeholder={t("type.here")}
             value={formik.values.name}
             onChange={formik.handleChange}
-            error={!!formik.errors.name && formik.touched.name}
+            error={!!(formik.errors.name && formik.touched.name)}
           />
         </div>
       </div>

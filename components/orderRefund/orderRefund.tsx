@@ -68,7 +68,7 @@ export default function OrderRefund({ handleClose }: Props) {
           value={formik.values.cause}
           onChange={formik.handleChange}
           placeholder={t("type.here")}
-          error={!!formik.errors.cause && formik.touched.cause}
+          error={!!(formik.errors.cause && formik.touched.cause)}
         />
       </div>
       <div className={cls.footer}>

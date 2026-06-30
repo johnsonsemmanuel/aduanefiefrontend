@@ -50,7 +50,7 @@ export default function ParcelSenderForm({ formik }: Props) {
             value={phone_from}
             onChange={formik.handleChange}
             placeholder={t("type.here")}
-            error={!!formik.errors.phone_from && formik.touched.phone_from}
+            error={!!(formik.errors.phone_from && formik.touched.phone_from)}
           />
         </Grid>
         <Grid item xs={12} md={5}>
@@ -73,7 +73,7 @@ export default function ParcelSenderForm({ formik }: Props) {
             value={formik.values.house_from}
             onChange={formik.handleChange}
             placeholder={t("type.here")}
-            error={!!formik.errors.house_from && formik.touched.house_from}
+            error={!!(formik.errors.house_from && formik.touched.house_from)}
           />
         </Grid>
         <Grid item xs={12} md={5}>
@@ -83,7 +83,7 @@ export default function ParcelSenderForm({ formik }: Props) {
             value={formik.values.stage_from}
             onChange={formik.handleChange}
             placeholder={t("type.here")}
-            error={!!formik.errors.stage_from && formik.touched.stage_from}
+            error={!!(formik.errors.stage_from && formik.touched.stage_from)}
           />
         </Grid>
         <Grid item xs={12} md={5}>
@@ -93,7 +93,7 @@ export default function ParcelSenderForm({ formik }: Props) {
             value={formik.values.room_from}
             onChange={formik.handleChange}
             placeholder={t("type.here")}
-            error={!!formik.errors.room_from && formik.touched.room_from}
+            error={!!(formik.errors.room_from && formik.touched.room_from)}
           />
         </Grid>
 
@@ -104,7 +104,7 @@ export default function ParcelSenderForm({ formik }: Props) {
             value={formik.values.note}
             onChange={formik.handleChange}
             placeholder={t("type.here")}
-            error={!!formik.errors.note && formik.touched.note}
+            error={!!(formik.errors.note && formik.touched.note)}
           />
         </Grid>
       </Grid>

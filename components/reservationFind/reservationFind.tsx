@@ -95,7 +95,7 @@ export default function ReservationFind({ handleClose }: Props) {
                 setSelectedShop(value);
                 formik.setFieldValue("shop_id", value?.id);
               }}
-              error={!!formik.errors.shop_id && formik.touched.shop_id}
+              error={!!(formik.errors.shop_id && formik.touched.shop_id)}
             />
           </Grid>
           <Grid item xs={12} md={6}>
@@ -103,7 +103,7 @@ export default function ReservationFind({ handleClose }: Props) {
               name="date"
               label={t("date")}
               value={formik.values.date}
-              error={!!formik.errors.zone_id && formik.touched.zone_id}
+              error={!!(formik.errors.zone_id && formik.touched.zone_id)}
               onChange={(event) => {
                 formik.setFieldValue("date", event);
               }}

@@ -160,7 +160,7 @@ export default function WalletTopup({ handleClose }: Props) {
                 placeholder={t("type.here")}
                 value={formik.values.price}
                 onChange={formik.handleChange}
-                error={!!formik.errors.price && formik.touched.price}
+                error={!!(formik.errors.price && formik.touched.price)}
               />
               <div style={{ color: "red", fontSize: "14px" }}>
                 {formik.errors?.price && formik.touched?.price

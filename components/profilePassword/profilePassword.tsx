@@ -94,7 +94,7 @@ export default function ProfilePassword({ handleClose }: Props) {
               placeholder={t("type.here")}
               value={formik.values.password}
               onChange={formik.handleChange}
-              error={!!formik.errors.password && formik.touched.password}
+              error={!!(formik.errors.password && formik.touched.password)}
             />
             <div style={{ color: "red", fontSize: "14px" }}>
               {formik.errors?.password && formik.touched?.password

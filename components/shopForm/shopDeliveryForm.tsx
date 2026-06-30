@@ -81,7 +81,7 @@ export default function ShopDeliveryForm({ formik }: Props) {
           value={price}
           onChange={formik.handleChange}
           placeholder={t("type.here")}
-          error={!!formik.errors.price && formik.touched.price}
+          error={!!(formik.errors.price && formik.touched.price)}
         />
       </Grid>
       <Grid item xs={12}>
@@ -93,7 +93,7 @@ export default function ShopDeliveryForm({ formik }: Props) {
           value={price_per_km}
           onChange={formik.handleChange}
           placeholder={t("type.here")}
-          error={!!formik.errors.price_per_km && formik.touched.price_per_km}
+          error={!!(formik.errors.price_per_km && formik.touched.price_per_km)}
         />
       </Grid>
     </Grid>

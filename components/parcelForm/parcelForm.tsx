@@ -89,7 +89,7 @@ export default function ParcelForm({
             }
             formik.handleChange(event);
           }}
-          error={!!formik.errors.type_id && formik.touched.type_id}
+          error={!!(formik.errors.type_id && formik.touched.type_id)}
         />
       </Grid>
       <Grid item xs={12} lg={3} md={4}>
@@ -102,7 +102,7 @@ export default function ParcelForm({
           onDateChange={(event) => {
             formik.setFieldValue("delivery_date", event);
           }}
-          error={!!formik.errors.delivery_date && formik.touched.delivery_date}
+          error={!!(formik.errors.delivery_date && formik.touched.delivery_date)}
           time={delivery_time}
           options={getTimeSlots("06:00", "23:00", false, 60).map((el) => ({
             label: el,

@@ -83,7 +83,7 @@ export default function SendWalletMoney({
               placeholder={t("type.here")}
               value={formik.values.price}
               onChange={formik.handleChange}
-              error={!!formik.errors.price && formik.touched.price}
+              error={!!(formik.errors.price && formik.touched.price)}
             />
             <div style={{ color: "red", fontSize: "14px" }}>
               {formik.errors?.price && formik.touched?.price
@@ -99,7 +99,7 @@ export default function SendWalletMoney({
               onChange={formik.handleChange}
               name="uuid"
               placeholder={t("search.user")}
-              error={!!formik.errors.uuid && formik.touched.uuid}
+              error={!!(formik.errors.uuid && formik.touched.uuid)}
             />
             <div style={{ color: "red", fontSize: "14px" }}>
               {formik.errors?.uuid && formik.touched?.uuid

@@ -78,7 +78,7 @@ export default function ShopGeneralForm({
           value={phone}
           onChange={formik.handleChange}
           placeholder={t("type.here")}
-          error={!!formik.errors.phone && formik.touched.phone}
+          error={!!(formik.errors.phone && formik.touched.phone)}
         />
       </Grid>
       <Grid item xs={48} md={24} lg={12}>
@@ -87,7 +87,7 @@ export default function ShopGeneralForm({
           label={t("documents")}
           fileList={formik.values.documents || []}
           setFileList={(files) => formik.setFieldValue("documents", files)}
-          error={!!formik.errors.documents && formik.touched.documents}
+          error={!!(formik.errors.documents && formik.touched.documents)}
           type="shop-documents"
         />
       </Grid>
@@ -110,7 +110,7 @@ export default function ShopGeneralForm({
           value={min_amount}
           onChange={formik.handleChange}
           placeholder={t("type.here")}
-          error={!!formik.errors.min_amount && formik.touched.min_amount}
+          error={!!(formik.errors.min_amount && formik.touched.min_amount)}
         />
       </Grid>
       <Grid item xs={12} md={6} lg={6}>
@@ -122,7 +122,7 @@ export default function ShopGeneralForm({
           value={tax}
           onChange={formik.handleChange}
           placeholder={t("type.here")}
-          error={!!formik.errors.tax && formik.touched.tax}
+          error={!!(formik.errors.tax && formik.touched.tax)}
         />
       </Grid>
       <Grid item xs={12}>
@@ -133,7 +133,7 @@ export default function ShopGeneralForm({
           value={categories}
           onChange={formik.handleChange}
           placeholder={t("type.here")}
-          error={!!formik.errors.categories && formik.touched.categories}
+          error={!!(formik.errors.categories && formik.touched.categories)}
         />
       </Grid>
       <Grid item xs={12}>
@@ -144,7 +144,7 @@ export default function ShopGeneralForm({
           value={tags}
           onChange={formik.handleChange}
           placeholder={t("type.here")}
-          error={!!formik.errors.tags && formik.touched.tags}
+          error={!!(formik.errors.tags && formik.touched.tags)}
         />
       </Grid>
     </Grid>

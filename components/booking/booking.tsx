@@ -128,7 +128,7 @@ export default function Booking({ data, handleClose }: Props) {
               placeholder={t("enter.phone.number")}
               value={formik.values.phone}
               disabled
-              error={!!formik.errors.phone && formik.touched.phone}
+              error={!!(formik.errors.phone && formik.touched.phone)}
             />
             <p className={cls.errorText}>
               {!!formik.errors.phone && formik.touched.phone
