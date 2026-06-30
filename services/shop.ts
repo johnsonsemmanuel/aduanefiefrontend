@@ -6,7 +6,7 @@ const shopService = {
     request.get(`/rest/shops/paginate?${params}`),
   getAllBooking: (params: string): Promise<Paginate<IShop>> =>
     request.get(`/rest/booking/shops/paginate?${params}`),
-  getAll Farms: (params: string): Promise<Paginate<IBookingShop>> =>
+  getAllFarms: (params: string): Promise<Paginate<IBookingShop>> =>
     request.get(`/rest/shops/paginate?type=farm&${params}`),
   getAllShops: (params: string): Promise<Paginate<IShop>> =>
     request.get(`/rest/shops/paginate?type=shop&${params}`),
