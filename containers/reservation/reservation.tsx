@@ -20,8 +20,8 @@ import useModal from "hooks/useModal";
 import dynamic from "next/dynamic";
 import ModalContainer from "containers/modal/modal";
 
-const Async FarmListForm = dynamic(
-  () => import("components/farmListForm/async FarmListForm"),
+const AsyncFarmListForm = dynamic(
+  () => import("components/farmListForm/asyncFarmListForm"),
 );
 
 type Props = {
@@ -291,7 +291,7 @@ export default function Reservation({ data }: Props) {
       <ModalContainer open={branchModal} onClose={handleCloseBranchModal}>
         <div className={cls.modalWrapper}>
           <h1 className={cls.title}>{t("farms")}</h1>
-          <Async FarmListForm
+          <AsyncFarmListForm
             branchId={data?.id}
             handleSubmit={handleSubmit}
           />
