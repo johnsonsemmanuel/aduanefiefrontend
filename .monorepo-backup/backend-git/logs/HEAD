@@ -1,4 +1,0 @@
-0000000000000000000000000000000000000000 7007651e4cb531e2c78956f279fbff9630353229 evisa-backend <johnsonsemmanuel@gmail.com> 1782833694 +0000	commit (initial): Initial commit: Aduanefie backend API
-7007651e4cb531e2c78956f279fbff9630353229 0000000000000000000000000000000000000000 evisa-backend <johnsonsemmanuel@gmail.com> 1782833695 +0000	Branch: renamed refs/heads/master to refs/heads/main
-0000000000000000000000000000000000000000 7007651e4cb531e2c78956f279fbff9630353229 evisa-backend <johnsonsemmanuel@gmail.com> 1782833695 +0000	Branch: renamed refs/heads/master to refs/heads/main
-7007651e4cb531e2c78956f279fbff9630353229 c1a762ce5fa915de78e656afd89c02a590810361 evisa-backend <johnsonsemmanuel@gmail.com> 1782833724 +0000	commit (amend): Remove sensitive SQL dump files
