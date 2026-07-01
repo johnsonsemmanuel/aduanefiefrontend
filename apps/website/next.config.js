@@ -6,54 +6,63 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true",
 });
 
-// Patch React's exports to remove "react-server" condition BEFORE any bundler
-// resolves modules. This ensures require("react") always gets the full client
-// entry where hooks (useMemo, useId, etc.) work during SSR.
-function removeReactServerCondition(name) {
-  const paths = [
-    require.resolve(name + "/package.json"),
-  ];
-  // Also check next/dist/compiled/<name>
+// Replace react.react-server.js and react-dom.react-server.js file contents
+// with the full client entry (index.js), so NO MATTER how the bundler resolves
+// require("react"), hooks (useMemo, useId, etc.) always get the full dispatcher.
+function replaceReactServerEntry(name) {
+  const dirs = [];
+
+  // User's node_modules/<name>
   try {
-    const nextCompiled = require.resolve(
-      "next/dist/compiled/" + name + "/package.json",
-    );
-    paths.push(nextCompiled);
+    dirs.push(path.dirname(require.resolve(name + "/package.json")));
   } catch {}
 
-  for (const pkgPath of paths) {
+  // next/dist/compiled/<name>
+  try {
+    dirs.push(
+      path.dirname(
+        require.resolve("next/dist/compiled/" + name + "/package.json"),
+      ),
+    );
+  } catch {}
+
+  for (const dir of dirs) {
     try {
-      const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf8"));
-      let changed = false;
-      // Patch the "." export
-      if (pkg.exports?.["."]?.["react-server"]) {
-        delete pkg.exports["."]["react-server"];
-        changed = true;
-      }
-      // Also patch sub-entry exports (server, server.edge, etc.)
-      for (const key of Object.keys(pkg.exports || {})) {
-        if (pkg.exports[key]?.["react-server"]) {
-          delete pkg.exports[key]["react-server"];
-          changed = true;
-        }
-      }
-      if (changed) {
-        fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + "\n");
+      const reactServerFile = path.join(dir, name + ".react-server.js");
+      const indexFile = path.join(dir, "index.js");
+
+      if (fs.existsSync(reactServerFile) && fs.existsSync(indexFile)) {
+        // Replace react.react-server.js content with index.js content
+        fs.copyFileSync(indexFile, reactServerFile);
         console.log(
-          "  ✓ Patched " +
-            pkgPath.replace(process.cwd(), ".") +
-            ": removed react-server conditions",
+          "  ✓ Replaced " +
+            reactServerFile.replace(process.cwd(), ".") +
+            " with full client entry",
         );
       }
+
+      // Also handle the CJS files
+      for (const env of ["production", "development"]) {
+        const cjsReactServer = path.join(dir, "cjs", name + ".react-server." + env + ".js");
+        const cjsIndex = path.join(dir, "cjs", name + "." + env + ".js");
+        if (fs.existsSync(cjsReactServer) && fs.existsSync(cjsIndex)) {
+          fs.copyFileSync(cjsIndex, cjsReactServer);
+          console.log(
+            "  ✓ Replaced " +
+              cjsReactServer.replace(process.cwd(), ".") +
+              " with full client entry",
+          );
+        }
+      }
     } catch (e) {
-      console.error("  ✗ Failed to patch", pkgPath, e.message);
+      console.error("  ✗ Failed to patch", dir, e.message);
     }
   }
 }
 
-console.log("Patching React exports for SSR compatibility...");
-removeReactServerCondition("react");
-removeReactServerCondition("react-dom");
+console.log("Patching React server entries to use full client entries...");
+replaceReactServerEntry("react");
+replaceReactServerEntry("react-dom");
 
 const nextConfig = {
   serverExternalPackages: [
