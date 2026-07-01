@@ -15,7 +15,7 @@ import {
 import { CacheProvider, EmotionCache } from "@emotion/react";
 import MuiThemeProvider from "contexts/muiTheme/muiTheme.provider";
 import { useDeviceType } from "utils/useDeviceType";
-import { Hydrate, QueryClient, QueryClientProvider } from "react-query";
+import { QueryClient, QueryClientProvider } from "react-query";
 import { AuthProvider } from "contexts/auth/auth.provider";
 import { SettingsProvider } from "contexts/settings/settings.provider";
 import NProgress from "nprogress";
@@ -93,8 +93,7 @@ export default function ExtendedApp({
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Hydrate state={pageProps.dehydratedState}>
-        <CacheProvider value={emotionCache || csEmotionCache}>
+      <CacheProvider value={emotionCache || csEmotionCache}>
           <MuiThemeProvider deviceType={deviceType}>
             <ThemeProvider appTheme={appTheme} appDirection={appDirection}>
               <TranslationsProvider
@@ -151,7 +150,6 @@ export default function ExtendedApp({
             </ThemeProvider>
           </MuiThemeProvider>
         </CacheProvider>
-      </Hydrate>
     </QueryClientProvider>
   );
 }
