@@ -22,12 +22,12 @@ const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
   },
   [`&.${stepConnectorClasses.active}`]: {
     [`& .${stepConnectorClasses.line}`]: {
-      backgroundColor: "#83EA00",
+      backgroundColor: "var(--primary)",
     },
   },
   [`&.${stepConnectorClasses.completed}`]: {
     [`& .${stepConnectorClasses.line}`]: {
-      backgroundColor: "#83EA00",
+      backgroundColor: "var(--primary)",
     },
   },
   [`& .${stepConnectorClasses.line}`]: {
@@ -60,22 +60,22 @@ const ColorlibStepIconRoot = styled("div")<{
   "& svg": {
     width: 28,
     height: 28,
-    fill: "#898989",
+    fill: "var(--secondary-text)",
     "@media (max-width: 576px)": {
       width: 17,
       height: 17,
     },
   },
   ...(ownerState.active && {
-    backgroundColor: "#83EA00",
+    backgroundColor: "var(--primary)",
     "& svg": {
-      fill: "#232B2F",
+      fill: "var(--secondary-black)",
     },
   }),
   ...(ownerState.completed && {
-    backgroundColor: "#83EA00",
+    backgroundColor: "var(--primary)",
     "& svg": {
-      fill: "#232B2F",
+      fill: "var(--secondary-black)",
     },
   }),
 }));

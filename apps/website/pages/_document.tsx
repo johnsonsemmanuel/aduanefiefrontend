@@ -28,16 +28,22 @@ export default function MyDocument({
   settings,
 }: MyDocumentProps) {
   const settingsData = createSettings(settings?.data || []);
+  const brandBrown = "#67513a";
+  const brandCream = "#e8e0c6";
   const css = `
       :root {
          --primary: ${settingsData?.primary_color || PRIMARY_COLOR};
          --primary-selected: ${hexToRgba(settingsData?.primary_color || PRIMARY_COLOR, 0.1)};
          --primary-button-font-color: ${settingsData?.primary_button_font_color || PRIMARY_BUTTON_FONT_COLOR};
+         --brand-brown: ${brandBrown};
+         --brand-cream: ${brandCream};
       }
       [data-theme="dark"] {
         --primary: ${settingsData?.primary_color || PRIMARY_COLOR};
         --primary-selected: ${hexToRgba(settingsData?.primary_color || PRIMARY_COLOR, 0.1)};
         --primary-button-font-color: ${settingsData?.primary_button_font_color || PRIMARY_BUTTON_FONT_COLOR};
+        --brand-brown: ${brandBrown};
+        --brand-cream: ${brandCream};
       }
   `;
   return (

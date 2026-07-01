@@ -29,7 +29,7 @@ const BpCheckedIcon = styled(BpIcon)({
     display: "block",
     width: 18,
     height: 18,
-    backgroundImage: "radial-gradient(#232B2F,#232B2F 28%,transparent 32%)",
+    backgroundImage: "radial-gradient(var(--secondary-black),var(--secondary-black) 28%,transparent 32%)",
     content: '""',
   },
   "input:hover ~ &": {

@@ -38,7 +38,7 @@
       &.active {
         background-color: var(--primary);
         svg {
-          fill: #232b2f;
+          fill: var(--dark-blue);
         }
       }
       @media (max-width: 576px) {

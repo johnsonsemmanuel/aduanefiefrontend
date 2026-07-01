@@ -44,10 +44,10 @@
         &.active {
           background-color: var(--primary);
           svg {
-            fill: #232b2f;
+            fill: var(--dark-blue);
           }
           .text {
-            color: #232b2f;
+            color: var(--dark-blue);
           }
         }
       }

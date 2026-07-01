@@ -184,7 +184,7 @@ export const MapIcon = (props = {}) => (
     <g opacity="0.5" filter="url(#filter0_f_5875_102)">
       <ellipse cx="35.7143" cy="70" rx="20.7143" ry="5" fill="black" />
     </g>
-    <circle cx="35.9994" cy="23.9994" r="23.9994" fill="#232B2F" />
+    <circle cx="35.9994" cy="23.9994" r="23.9994" fill="var(--dark-blue)" />
     <path
       fillRule="evenodd"
       clipRule="evenodd"
