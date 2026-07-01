@@ -3,6 +3,14 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true",
 });
 const nextConfig = {
+  serverExternalPackages: [
+    "react-redux",
+    "redux-persist",
+    "react-query",
+    "@emotion/react",
+    "@emotion/styled",
+    "@emotion/cache",
+  ],
   reactStrictMode: false,
   typescript: {
     ignoreBuildErrors: false,
