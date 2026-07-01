@@ -1,7 +1,9 @@
 /** @type {import('next').NextConfig} */
+const path = require("path");
 const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true",
 });
+
 const nextConfig = {
   serverExternalPackages: [
     "react-redux",
@@ -37,6 +39,16 @@ const nextConfig = {
     minimumCacheTTL: 3600,
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+  },
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      // Remove "react-server" condition so webpack resolves require("react")
+      // to React's full client entry instead of the react-server stub
+      config.resolve.conditionNames = (
+        config.resolve.conditionNames || []
+      ).filter((name) => name !== "react-server");
+    }
+    return config;
   },
 };
 
