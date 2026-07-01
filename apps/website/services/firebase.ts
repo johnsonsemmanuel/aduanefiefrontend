@@ -24,6 +24,8 @@ import { setChats, setMessages } from "redux/slices/chat";
 import { IChat, IMessage } from "interfaces";
 import { error } from "components/alert/toast";
 
+const isBrowser = typeof window !== "undefined";
+
 const firebaseConfig = {
   apiKey: API_KEY,
   authDomain: AUTH_DOMAIN,
@@ -33,39 +35,36 @@ const firebaseConfig = {
   appId: APP_ID,
   measurementId: MEASUREMENT_ID,
 };
-const app = initializeApp(firebaseConfig);
 
-export const auth = getAuth(app);
-export { app as default };
+let app: ReturnType<typeof initializeApp> | undefined;
+let auth: ReturnType<typeof getAuth> | undefined;
+let storage: ReturnType<typeof getStorage> | undefined;
+let db: ReturnType<typeof getFirestore> | undefined;
 
-export const storage = getStorage(app);
-export const db = getFirestore(app);
-
-onSnapshot(
-  query(collection(db, "messages"), orderBy("created_at", "asc")),
-  (querySnapshot) => {
-    const messages = querySnapshot.docs.map((x) => ({
-      id: x.id,
-      ...x.data(),
-      created_at: String(new Date(x.data().created_at?.seconds * 1000)),
-    }));
-    store.dispatch(setMessages(messages));
+function initFirebase() {
+  if (app) return;
+  try {
+    app = initializeApp(firebaseConfig);
+    auth = getAuth(app);
+    storage = getStorage(app);
+    db = getFirestore(app);
+  } catch (e) {
+    console.warn("Firebase init failed:", e);
   }
-);
-onSnapshot(
-  query(collection(db, "chats"), orderBy("created_at", "asc")),
-  (querySnapshot) => {
-    const chats = querySnapshot.docs.map((x) => ({
-      id: x.id,
-      ...x.data(),
-      created_at: String(new Date(x.data().created_at?.seconds * 1000)),
-    }));
-    store.dispatch(setChats(chats));
-  }
-);
+}
+
+if (isBrowser) {
+  initFirebase();
+}
+
+export { auth, app as default };
+
+export { storage, db };
 
 export async function sendMessage(payload: IMessage) {
   try {
+    if (!db) initFirebase();
+    if (!db) return;
     await addDoc(collection(db, "messages"), {
       ...payload,
       created_at: serverTimestamp(),
@@ -78,6 +77,8 @@ export async function sendMessage(payload: IMessage) {
 
 export async function createChat(payload: IChat) {
   try {
+    if (!db) initFirebase();
+    if (!db) return;
     await addDoc(collection(db, "chats"), {
       ...payload,
       created_at: serverTimestamp(),
