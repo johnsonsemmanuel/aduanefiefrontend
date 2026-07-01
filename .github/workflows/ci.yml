@@ -22,4 +22,5 @@ jobs:
       - name: Install dependencies
         run: npm install --legacy-peer-deps
       - name: Build website
-        run: npx turbo run build --filter=aduanefie
+        working-directory: apps/website
+        run: npx next build 2>&1
