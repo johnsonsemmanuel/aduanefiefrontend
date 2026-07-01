@@ -2,15 +2,15 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IShop } from "interfaces";
 import { RootState } from "redux/store";
 
-export type Favorite FarmsType = {
+export type FavoriteFarmsType = {
   favoriteFarms: IShop[];
 };
 
-const initialState: Favorite FarmsType = {
+const initialState: FavoriteFarmsType = {
   favoriteFarms: [],
 };
 
-const favorite FarmSlice = createSlice({
+const favoriteFarmsSlice = createSlice({
   name: "favoriteFarms",
   initialState,
   reducers: {
@@ -24,16 +24,16 @@ const favorite FarmSlice = createSlice({
       );
       state.favoriteFarms = filtered;
     },
-    clearLiked Farms(state) {
+    clearLikedFarms(state) {
       state.favoriteFarms = [];
     },
   },
 });
 
-export const { addToLiked, removeFromLiked, clearLiked Farms } =
-  favorite FarmSlice.actions;
+export const { addToLiked, removeFromLiked, clearLikedFarms } =
+  favoriteFarmsSlice.actions;
 
 export const selectLikedFarms = (state: RootState) =>
   state.liked.favoriteFarms;
 
-export default favorite FarmSlice.reducer;
+export default favoriteFarmsSlice.reducer;

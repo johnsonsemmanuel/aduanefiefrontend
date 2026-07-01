@@ -14,7 +14,7 @@ import { useSettings } from "contexts/settings/settings.context";
 import { useAppDispatch, useAppSelector } from "hooks/useRedux";
 import { clearUserCart } from "redux/slices/userCart";
 import { clearCart } from "redux/slices/cart";
-import { clearLiked Farms } from "redux/slices/favoriteFarms";
+import { clearLikedFarms } from "redux/slices/favoriteFarms";
 import { clearFilter } from "redux/slices/shopFilter";
 import { useQuery, useQueryClient } from "react-query";
 import profileService from "services/profile";
@@ -111,7 +111,7 @@ export function AuthProvider({ children, authState }: Props) {
     resetSettings();
     dispatch(clearUserCart());
     dispatch(clearCart());
-    dispatch(clearLiked Farms());
+    dispatch(clearLikedFarms());
     dispatch(clearFilter());
     dispatch(clearSearch());
     queryClient.invalidateQueries(["notificationStatistic"], { exact: false });
