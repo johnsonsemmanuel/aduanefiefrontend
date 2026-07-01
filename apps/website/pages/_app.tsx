@@ -1,7 +1,7 @@
 import "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
 import "../styles/globals.css";
 import "../styles/_chat.scss";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import App, { AppProps } from "next/app";
 import Layout from "containers/layout/layout";
 import { ToastContainer } from "react-toastify";
@@ -15,14 +15,13 @@ import {
 import { CacheProvider, EmotionCache } from "@emotion/react";
 import MuiThemeProvider from "contexts/muiTheme/muiTheme.provider";
 import { useDeviceType } from "utils/useDeviceType";
-import { QueryClient, QueryClientProvider } from "react-query";
+import dynamic from "next/dynamic";
 import { AuthProvider } from "contexts/auth/auth.provider";
 import { SettingsProvider } from "contexts/settings/settings.provider";
 import NProgress from "nprogress";
 import { Provider } from "react-redux";
 import { store, persistor } from "redux/store";
 import { PersistGate } from "redux-persist/integration/react";
-import { config } from "constants/reactQuery.config";
 import Script from "next/script";
 import { G_TAG } from "constants/constants";
 import "react-toastify/dist/ReactToastify.css";
@@ -34,6 +33,11 @@ import translationService from "services/translations";
 import TranslationsProvider from "containers/translationsProvider/translationsProvider";
 import languageService from "services/language";
 import { Langauge } from "interfaces";
+
+const ClientQueryClientProvider = dynamic(
+  () => import("../components/clientQueryClientProvider"),
+  { ssr: false },
+);
 
 Router.events.on("routeChangeStart", () => NProgress.start());
 Router.events.on("routeChangeComplete", () => NProgress.done());
@@ -87,70 +91,75 @@ export default function ExtendedApp({
   const { pathname } = useRouter();
   const isAuthPage = pagesWithoutLayout.some((item) => pathname.includes(item));
   const deviceType = useDeviceType(userAgent);
-  const [queryClient] = useState(() => new QueryClient(config));
   const csEmotionCache =
     appDirection === "rtl" ? clientSideRtlEmotionCache : clientSideEmotionCache;
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
 
-  return (
-    <QueryClientProvider client={queryClient}>
-      <CacheProvider value={emotionCache || csEmotionCache}>
-          <MuiThemeProvider deviceType={deviceType}>
-            <ThemeProvider appTheme={appTheme} appDirection={appDirection}>
-              <TranslationsProvider
-                locale={locale}
-                languages={languages}
-                translation={translation}
-              >
-                <Provider store={store}>
-                  <SettingsProvider
-                    settingsState={settingsState}
-                    defaultAddress={defaultAddress}
-                  >
-                    <AuthProvider authState={authState}>
-                      {isAuthPage ? (
-                        <Component uiType={uiType} {...pageProps} />
-                      ) : (
-                        <PersistGate loading={null} persistor={persistor}>
-                          {() => (
-                            <Layout locale={locale}>
-                              <Component uiType={uiType} {...pageProps} />
-                            </Layout>
-                          )}
-                        </PersistGate>
-                      )}
-                    </AuthProvider>
-                  </SettingsProvider>
-                  <ToastContainer
-                    position="top-right"
-                    autoClose={5000}
-                    hideProgressBar={true}
-                    newestOnTop={false}
-                    closeOnClick
-                    pauseOnFocusLoss
-                    draggable
-                    pauseOnHover
-                    closeButton={false}
-                    className="toast-alert"
-                  />
-                </Provider>
-              </TranslationsProvider>
-              <Script
-                src={`https://www.googletagmanager.com/gtag/js?id=${G_TAG}`}
-                strategy="afterInteractive"
-              />
-              <Script id="google-analytics" strategy="afterInteractive">
-                {`
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){window.dataLayer.push(arguments);}
-                gtag('js', new Date());
+  const appContent = (
+    <CacheProvider value={emotionCache || csEmotionCache}>
+        <MuiThemeProvider deviceType={deviceType}>
+          <ThemeProvider appTheme={appTheme} appDirection={appDirection}>
+            <TranslationsProvider
+              locale={locale}
+              languages={languages}
+              translation={translation}
+            >
+              <Provider store={store}>
+                <SettingsProvider
+                  settingsState={settingsState}
+                  defaultAddress={defaultAddress}
+                >
+                  <AuthProvider authState={authState}>
+                    {isAuthPage ? (
+                      <Component uiType={uiType} {...pageProps} />
+                    ) : (
+                      <PersistGate loading={null} persistor={persistor}>
+                        {() => (
+                          <Layout locale={locale}>
+                            <Component uiType={uiType} {...pageProps} />
+                          </Layout>
+                        )}
+                      </PersistGate>
+                    )}
+                  </AuthProvider>
+                </SettingsProvider>
+                <ToastContainer
+                  position="top-right"
+                  autoClose={5000}
+                  hideProgressBar={true}
+                  newestOnTop={false}
+                  closeOnClick
+                  pauseOnFocusLoss
+                  draggable
+                  pauseOnHover
+                  closeButton={false}
+                  className="toast-alert"
+                />
+              </Provider>
+            </TranslationsProvider>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${G_TAG}`}
+              strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+              {`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){window.dataLayer.push(arguments);}
+              gtag('js', new Date());
 
-                gtag('config', '${G_TAG}');
-              `}
-              </Script>
-            </ThemeProvider>
-          </MuiThemeProvider>
-        </CacheProvider>
-    </QueryClientProvider>
+              gtag('config', '${G_TAG}');
+            `}
+            </Script>
+          </ThemeProvider>
+        </MuiThemeProvider>
+      </CacheProvider>
+  );
+
+  return mounted ? (
+    <ClientQueryClientProvider>{appContent}</ClientQueryClientProvider>
+  ) : (
+    appContent
   );
 }
 
