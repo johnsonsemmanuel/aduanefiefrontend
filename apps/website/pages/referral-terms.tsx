@@ -1,22 +1,29 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import SEO from "components/seo";
 import Content from "containers/content/content";
-import { dehydrate, QueryClient, useQuery } from "react-query";
 import { GetStaticProps } from "next";
 import informationService from "services/information";
 import { useTranslation } from "react-i18next";
 import { getPackerie } from "utils/session";
 import getLanguage from "utils/getLanguage";
 
-type Props = {};
+type Props = {
+  referralData?: any;
+};
 
-export default function ReferralTerms({}: Props) {
+export default function ReferralTerms({ referralData }: Props) {
   const { t, i18n } = useTranslation();
-  const locale = i18n.language;
+  const [data, setData] = useState(referralData);
 
-  const { data } = useQuery(["referral-terms", locale], () =>
-    informationService.getReferrals().catch(() => null),
-  );
+  useEffect(() => {
+    if (!data) {
+      informationService.getReferrals().then((res) => {
+        if (res) setData(res);
+      }).catch(() => {});
+    }
+  }, []);
+
+  const content = data?.data?.translation;
 
   return (
     <>
@@ -24,8 +31,8 @@ export default function ReferralTerms({}: Props) {
       <Content
         data={{
           title: t("referral.terms"),
-          description: data?.data?.translation?.faq,
-          locale: data?.data?.translation?.locale,
+          description: content?.faq,
+          locale: content?.locale,
         }}
       />
     </>
@@ -33,20 +40,20 @@ export default function ReferralTerms({}: Props) {
 }
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
-  const queryClient = new QueryClient();
   const locale = getLanguage(getPackerie("locale", ctx));
 
+  let referralData = null;
   try {
-    await queryClient.prefetchQuery(["referral-terms", locale], () =>
-      informationService.getReferrals(),
-    );
+    const res = await informationService.getReferrals();
+    referralData = res;
   } catch (e) {
     console.log("Failed to prefetch referral terms:", e);
   }
 
   return {
     props: {
-      dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
+      referralData,
     },
+    revalidate: 3600,
   };
 };

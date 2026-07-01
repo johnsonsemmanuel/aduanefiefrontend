@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import SEO from "components/seo";
 import BlogContent from "containers/blogContent/blogContent";
 import { useRouter } from "next/router";
-import { dehydrate, QueryClient, useQuery } from "react-query";
 import blogService from "services/blog";
 import { GetStaticPaths, GetStaticProps } from "next";
 import getImage from "utils/getImage";
@@ -10,23 +9,25 @@ import { useTranslation } from "react-i18next";
 import { getPackerie } from "utils/session";
 import getLanguage from "utils/getLanguage";
 
-type Props = {};
+type Props = {
+  initialBlogData?: any;
+};
 
-export default function BlogSingle({}: Props) {
+export default function BlogSingle({ initialBlogData }: Props) {
   const { i18n } = useTranslation();
   const locale = i18n.language;
   const { query } = useRouter();
   const blogId = String(query.id);
 
-  const { data, error } = useQuery(
-    ["blog", blogId, locale],
-    () => blogService.getById(blogId),
-    { staleTime: 0 },
-  );
+  const [data, setData] = useState(initialBlogData);
 
-  if (error) {
-    console.log("error => ", error);
-  }
+  useEffect(() => {
+    if (!data) {
+      blogService.getById(blogId).then((res) => {
+        if (res) setData(res);
+      }).catch(() => {});
+    }
+  }, [blogId]);
 
   return (
     <>
@@ -41,18 +42,22 @@ export default function BlogSingle({}: Props) {
 }
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
-  const queryClient = new QueryClient();
   const { params } = ctx;
   const locale = getLanguage(getPackerie("locale", ctx));
 
-  await queryClient.prefetchQuery(["blog", params?.id, locale], () =>
-    blogService.getById(String(params?.id)),
-  );
+  let initialBlogData = null;
+  try {
+    const res = await blogService.getById(String(params?.id));
+    initialBlogData = res;
+  } catch (e) {
+    console.log("Failed to prefetch blog:", e);
+  }
 
   return {
     props: {
-      dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
+      initialBlogData,
     },
+    revalidate: 3600,
   };
 };
 
