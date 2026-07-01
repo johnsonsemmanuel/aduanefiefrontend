@@ -44,6 +44,10 @@ function errorHandler(error) {
       console.log("404 Not Found:", error?.config?.url);
     }
   }
+  if (!isBrowser) {
+    console.log("Suppressing error during SSR:", error?.config?.url);
+    return Promise.resolve(null);
+  }
   console.log("error => ", error);
 
   return Promise.reject(error.response);
