@@ -52,9 +52,11 @@ export const getPackerie = (key: string, context?: any) => {
 };
 
 export const setPackerie = (key: string, token: any) => {
+  if (!isBrowser) return;
   setBrowserCookie(key, token, 7);
 };
 
 export const removePackerie = (key: string) => {
+  if (!isBrowser) return;
   removeBrowserCookie(key);
 };
