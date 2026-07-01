@@ -11,7 +11,7 @@ import dynamic from "next/dynamic";
 import {
   addToLiked,
   removeFromLiked,
-  selectLiked Farms,
+  selectLikedFarms,
 } from "redux/slices/favoriteFarms";
 import { useAppDispatch, useAppSelector } from "hooks/useRedux";
 import BonusCaption from "components/bonusCaption/bonusCaption";
@@ -47,7 +47,7 @@ export default function ShopHeader({ data }: Props) {
   const { t } = useLocale();
   const isDesktop = useMediaQuery("(min-width:1140px)");
   const dispatch = useAppDispatch();
-  const favoriteFarms = useAppSelector(selectLiked Farms);
+  const favoriteFarms = useAppSelector(selectLikedFarms);
   const { query } = useRouter();
   const { workingSchedule, isShopClosed } = useShopWorkingSchedule(data);
   const currency = useAppSelector(selectCurrency);

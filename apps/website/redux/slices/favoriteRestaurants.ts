@@ -33,7 +33,7 @@ const favorite FarmSlice = createSlice({
 export const { addToLiked, removeFromLiked, clearLiked Farms } =
   favorite FarmSlice.actions;
 
-export const selectLiked Farms = (state: RootState) =>
+export const selectLikedFarms = (state: RootState) =>
   state.liked.favoriteFarms;
 
 export default favorite FarmSlice.reducer;

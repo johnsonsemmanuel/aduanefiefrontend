@@ -4,7 +4,7 @@ import BannerContainer from "containers/banner/banner";
 import { useTranslation } from "react-i18next";
 import dynamic from "next/dynamic";
 import { useAppSelector } from "hooks/useRedux";
-import { selectLiked Farms } from "redux/slices/favoriteFarms";
+import { selectLikedFarms } from "redux/slices/favoriteFarms";
 import { useQuery } from "react-query";
 import storyService from "services/story";
 import bannerService from "services/banner";
@@ -20,7 +20,7 @@ type Props = {};
 export default function Liked({}: Props) {
   const { t, i18n } = useTranslation();
   const locale = i18n.language;
-  const favoriteFarms = useAppSelector(selectLiked Farms);
+  const favoriteFarms = useAppSelector(selectLikedFarms);
 
   const { data: stories, isLoading: isStoriesLoading } = useQuery(
     ["stories", locale],
