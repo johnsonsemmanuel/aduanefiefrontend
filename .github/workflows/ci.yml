@@ -1,0 +1,35 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Enable Corepack (yarn 4)
+        run: corepack enable
+      - name: Cache yarn
+        uses: actions/cache@v4
+        with:
+          path: |
+            .yarn/cache
+            node_modules
+            apps/*/node_modules
+          key: yarn-${{ hashFiles('yarn.lock') }}
+          restore-keys: yarn-
+      - name: Cache next.js build
+        uses: actions/cache@v4
+        with:
+          path: apps/website/.next/cache
+          key: next-${{ runner.os }}-${{ hashFiles('apps/website/**/*.{ts,tsx,js,jsx,scss}') }}
+      - name: Install dependencies
+        run: yarn install
+      - name: Build
+        run: yarn turbo run build --filter=aduanefie
