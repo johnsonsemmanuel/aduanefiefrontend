@@ -46,7 +46,6 @@ const TranslationsProvider = ({
     supportedLngs,
     ns: ["translation"],
     defaultNS: "translation",
-    localePath: null,
     resources: {
       [locale]: { translation: translation || {} },
     },
