@@ -23,4 +23,13 @@ jobs:
         run: npm install --legacy-peer-deps
       - name: Build website
         working-directory: apps/website
-        run: npx next build 2>&1
+        run: |
+          npx next build 2>&1 | tee /tmp/next-build.log
+          exit_code=${PIPESTATUS[0]}
+          if [ $exit_code -ne 0 ]; then
+            echo "## Build failed with exit code $exit_code" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            tail -80 /tmp/next-build.log >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            exit $exit_code
+          fi
