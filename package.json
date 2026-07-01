@@ -8,6 +8,7 @@
     "apps/qr-code"
   ],
   "scripts": {
+    "postinstall": "node scripts/patch-react-server.js",
     "dev": "turbo run dev",
     "build": "turbo run build",
     "lint": "turbo run lint",
