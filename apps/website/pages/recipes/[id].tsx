@@ -4,6 +4,7 @@ import RecipeContainer from "containers/recipeContainer/recipeContainer";
 import { GetServerSideProps } from "next";
 import { dehydrate, QueryClient, useQuery } from "react-query";
 import getLanguage from "utils/getLanguage";
+import { getPackerie } from "utils/session";
 import recipeService from "services/recipe";
 import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
@@ -64,7 +65,7 @@ export const getServerSideProps: GetServerSideProps = async ({
   const queryClient = new QueryClient();
   const recipeId = Number(query.id);
   const currencyId = Number(query.currency_id);
-  const locale = getLanguage(req.packeries?.locale);
+  const locale = getLanguage(getPackerie("locale", { req }));
 
   await queryClient.prefetchQuery(
     ["recipe", recipeId, locale, currencyId],

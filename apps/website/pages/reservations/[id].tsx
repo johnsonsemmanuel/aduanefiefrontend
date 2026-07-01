@@ -4,6 +4,7 @@ import { GetServerSideProps } from "next";
 import { QueryClient, dehydrate, useQuery } from "react-query";
 import shopService from "services/shop";
 import getLanguage from "utils/getLanguage";
+import { getPackerie } from "utils/session";
 import { useRouter } from "next/router";
 import useLocale from "hooks/useLocale";
 import ReservationContainer from "containers/reservation/reservation";
@@ -38,7 +39,7 @@ export default function ReservationShop({}: Props) {
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const queryClient = new QueryClient();
-  const locale = getLanguage(ctx.req.packeries?.locale);
+  const locale = getLanguage(getPackerie("locale", ctx));
   const shopId = Number(ctx.query.id);
 
   await queryClient.prefetchQuery(["bookingShop", locale, shopId], () =>

@@ -5,6 +5,7 @@ import CareersContent from "containers/content/careersContent";
 import { GetServerSideProps } from "next";
 import { QueryClient, dehydrate, useQuery } from "react-query";
 import getLanguage from "utils/getLanguage";
+import { getPackerie } from "utils/session";
 import careerService from "services/career";
 import useLocale from "hooks/useLocale";
 
@@ -33,7 +34,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 }) => {
   const queryClient = new QueryClient();
   const careerId = Number(query.id);
-  const locale = getLanguage(req.packeries?.locale);
+  const locale = getLanguage(getPackerie("locale", { req }));
 
   await queryClient.prefetchQuery(["career", careerId, locale], () =>
     careerService.getById(careerId)

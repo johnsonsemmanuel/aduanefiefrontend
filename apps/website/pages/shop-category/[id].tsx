@@ -48,7 +48,7 @@ export default function ShopCategorySinglePage({ uiType = "1" }: PageProps) {
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const queryClient = new QueryClient();
   const categoryId = String(ctx.query.id);
-  const locale = getLanguage(ctx.req.packeries?.locale);
+  const locale = getLanguage(getPackerie("locale", ctx));
   const settingsData = await informationService.getSettings();
   const obj = createSettings(settingsData?.data);
 

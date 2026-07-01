@@ -10,6 +10,7 @@ import BannerHeader from "components/bannerHeader/bannerHeader";
 import getImage from "utils/getImage";
 import { useTranslation } from "react-i18next";
 import getLanguage from "utils/getLanguage";
+import { getPackerie } from "utils/session";
 import Loader from "components/loader/loader";
 
 const FooterMenu = dynamic(() => import("containers/footerMenu/footerMenu"));
@@ -103,7 +104,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 }) => {
   const queryClient = new QueryClient();
   const bannerId = String(query.id);
-  const locale = getLanguage(req.packeries?.locale);
+  const locale = getLanguage(getPackerie("locale", { req }));
 
   await queryClient.prefetchInfiniteQuery(["banner", bannerId, locale], () =>
     bannerService.getById(bannerId, { perPage: PER_PAGE })

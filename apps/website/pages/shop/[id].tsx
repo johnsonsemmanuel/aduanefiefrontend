@@ -325,7 +325,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const shopId = Number(ctx.query.id);
   const groupId = Number(ctx.query.g);
   let memberState = getPackerie("member", ctx);
-  const locale = getLanguage(ctx.req.packeries?.locale);
+  const locale = getLanguage(getPackerie("locale", ctx));
 
   if (memberState && groupId) {
     if (memberState.cart_id !== groupId) {

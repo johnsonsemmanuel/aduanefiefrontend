@@ -7,6 +7,7 @@ import { GetServerSideProps } from "next";
 import getImage from "utils/getImage";
 import { useTranslation } from "react-i18next";
 import getLanguage from "utils/getLanguage";
+import { getPackerie } from "utils/session";
 import Loader from "components/loader/loader";
 import FooterMenu from "containers/footerMenu/footerMenu";
 import dynamic from "next/dynamic";
@@ -113,7 +114,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 }) => {
   const queryClient = new QueryClient();
   const adId = String(query.id);
-  const locale = getLanguage(req.packeries?.locale);
+  const locale = getLanguage(getPackerie("locale", { req }));
   const settingsData = await informationService.getSettings();
   const obj = createSettings(settingsData?.data);
 

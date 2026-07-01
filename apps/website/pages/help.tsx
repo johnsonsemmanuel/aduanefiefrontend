@@ -8,6 +8,7 @@ import Loader from "components/loader/loader";
 import { GetServerSideProps } from "next";
 import { useTranslation } from "react-i18next";
 import getLanguage from "utils/getLanguage";
+import { getPackerie } from "utils/session";
 
 const PER_PAGE = 12;
 
@@ -69,7 +70,7 @@ export default function Help({}: Props) {
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   const queryClient = new QueryClient();
-  const locale = getLanguage(req.packeries?.locale);
+  const locale = getLanguage(getPackerie("locale", { req }));
 
   await queryClient.prefetchInfiniteQuery(["faqs", locale], () =>
     faqService.getAll({ perPage: PER_PAGE }),
