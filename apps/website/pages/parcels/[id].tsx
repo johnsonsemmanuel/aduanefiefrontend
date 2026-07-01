@@ -63,7 +63,7 @@ export default function ParcelSingle({}: Props) {
                 price: 0,
                 open: true,
               },
-            } as Order
+            } as unknown as Order
           }
           readonly
           loading={isLoading}

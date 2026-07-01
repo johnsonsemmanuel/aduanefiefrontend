@@ -77,7 +77,7 @@ export default function ParcelHeaderForm({
                     price: 0,
                     open: true,
                   },
-                } as Order
+                } as unknown as Order
               }
               price={price}
             />
