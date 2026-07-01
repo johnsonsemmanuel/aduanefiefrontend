@@ -130,7 +130,7 @@ export default function WalletTopup({ handleClose }: Props) {
       externalPay(body);
     },
     validate: (values: formValues) => {
-      const errors = {} as formValues;
+      const errors: Record<string, string> = {};
       if (!values.price) {
         errors.price = t("required");
       }

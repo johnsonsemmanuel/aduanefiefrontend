@@ -81,7 +81,7 @@ export default function BeSellerContainer({ children }: Props) {
       mutate(body);
     },
     validate: (values: ShopFormType) => {
-      const errors: Partial<ShopFormType> = {};
+      const errors: Record<string, string> = {};
       const re = /^[\+]?[0-9\b]+$/;
       if (!values.images[0]) {
         errors.logo = t("required");

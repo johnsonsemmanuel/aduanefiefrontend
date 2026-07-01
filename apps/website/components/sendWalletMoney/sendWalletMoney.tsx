@@ -59,7 +59,7 @@ export default function SendWalletMoney({
       sendMoney(body);
     },
     validate: (values: formValues) => {
-      const errors = {} as formValues;
+      const errors: Record<string, string> = {};
       if (!values.price) {
         errors.price = t("required");
       }

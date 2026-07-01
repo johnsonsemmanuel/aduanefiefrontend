@@ -113,7 +113,7 @@ export default function ParcelCheckoutContainer({ children }: Props) {
       mutate(body);
     },
     validate: (values: Partial<ParcelFormValues>) => {
-      const errors: Partial<ParcelFormValues> = {};
+      const errors: Record<string, string> = {};
       const re = /^[\+]?[0-9\b]+$/;
       if (!values.type_id) {
         errors.type_id = t("required");
