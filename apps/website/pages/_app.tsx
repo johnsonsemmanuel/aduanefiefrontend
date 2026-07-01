@@ -169,15 +169,24 @@ ExtendedApp.getInitialProps = async (appContext: any) => {
   const uiType =
     uiTypes.find((type) => type === appContext.router.query?.v) || "1";
 
-  const languages = await languageService.getAllActive();
-  const defaultLanguage = languages?.data?.find((item) =>
-    Boolean(item?.default),
-  );
-  const lang = (locale ||
+  let languages, defaultLanguage, lang, translation;
+  try {
+    languages = await languageService.getAllActive();
+    defaultLanguage = languages?.data?.find((item) =>
+      Boolean(item?.default),
+    );
+  } catch (e) {
+    console.log("Failed to fetch languages:", e);
+  }
+  lang = (locale ||
     defaultLanguage?.locale ||
     DEFAULT_LANGUAGE) as string;
 
-  const translation = await translationService.getAll({ lang });
+  try {
+    translation = await translationService.getAll({ lang });
+  } catch (e) {
+    console.log("Failed to fetch translations:", e);
+  }
 
   return {
     ...appProps,

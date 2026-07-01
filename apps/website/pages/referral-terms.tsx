@@ -40,9 +40,13 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
   const queryClient = new QueryClient();
   const locale = getLanguage(getPackerie("locale", ctx));
 
-  await queryClient.prefetchQuery(["referral-terms", locale], () =>
-    informationService.getReferrals(),
-  );
+  try {
+    await queryClient.prefetchQuery(["referral-terms", locale], () =>
+      informationService.getReferrals(),
+    );
+  } catch (e) {
+    console.log("Failed to prefetch referral terms:", e);
+  }
 
   return {
     props: {
