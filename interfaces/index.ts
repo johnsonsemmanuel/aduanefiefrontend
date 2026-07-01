@@ -89,7 +89,7 @@ export interface IShop {
   rating_avg?: number;
   is_recommended?: boolean;
   discounts_count?: number;
-  type?: "farm" | "shop";
+  type?: "farm";
   discount?: any;
   reviews_count?: number;
   tags?: IShopTag[];
@@ -119,7 +119,7 @@ export interface IBookingShop {
   rating_avg?: number;
   is_recommended?: boolean;
   discounts_count?: number;
-  type?: "farm" | "shop";
+  type?: "farm";
   discount?: any;
   reviews_count?: number;
   tags?: IShopTag[];
@@ -481,7 +481,7 @@ export interface ShopFormType {
   images: [string, string];
   user_id?: number;
   location?: string;
-  type: "farm" | "shop";
+  type: "farm";
   logo?: string;
   background?: string;
   tags: string[];

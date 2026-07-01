@@ -47,17 +47,18 @@ export default function Homev1() {
   );
 
   const { isSuccess: isInsideZone, isLoading: isZoneLoading } = useQuery(
-    ["shopZones", location],
+    ["communityZones", location],
     () =>
-      shopService.checkZone({
+      shopService.checkCommunityZone({
         address: location,
       }),
+    { retry: false },
   );
 
   const { data: shops, isLoading: isShopLoading } = useQuery(
     ["shops", location, locale],
     () =>
-      shopService.getAllShops(
+      shopService.getAllFarms(
         qs.stringify({
           perPage: PER_PAGE,
           address: location,
@@ -115,7 +116,7 @@ export default function Homev1() {
   const { data: brandShops, isLoading: brandShopLoading } = useQuery(
     ["brandshops", locale, location],
     () =>
-      shopService.getAllShops(qs.stringify({ verify: "1", address: location })),
+      shopService.getAllFarms(qs.stringify({ verify: "1", address: location })),
   );
   const handleObserver = useCallback(
     (entries: any) => {

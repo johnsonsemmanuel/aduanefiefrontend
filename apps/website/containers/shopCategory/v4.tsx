@@ -46,7 +46,7 @@ export default function ShopCategory() {
   } = useInfiniteQuery(
     ["shops", locale, data?.data.id, order_by, group, location, newest, query?.sub],
     ({ pageParam = 1 }) =>
-      shopService.getAllShops(
+      shopService.getAllFarms(
         qs.stringify({
           page: pageParam,
           category_id: query?.sub || data?.data.id,

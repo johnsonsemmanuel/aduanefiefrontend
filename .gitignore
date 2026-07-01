@@ -37,6 +37,9 @@ bootstrap/cache/
 *.sql
 *.log
 
+# Backend (separate repo)
+backend/
+
 # Flutter
 .dart_tool/
 .flutter-plugins

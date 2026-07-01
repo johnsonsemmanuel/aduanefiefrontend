@@ -7,9 +7,7 @@ const shopService = {
   getAllBooking: (params: string): Promise<Paginate<IShop>> =>
     request.get(`/rest/booking/shops/paginate?${params}`),
   getAllFarms: (params: string): Promise<Paginate<IBookingShop>> =>
-    request.get(`/rest/shops/paginate?type=farm&${params}`),
-  getAllShops: (params: string): Promise<Paginate<IShop>> =>
-    request.get(`/rest/shops/paginate?type=shop&${params}`),
+    request.get(`/rest/shops/paginate?${params}`),
   getById: (id: number, params?: any): Promise<SuccessResponse<IShop>> =>
     request.get(`/rest/shops/${id}`, { params }),
   getRecommended: (params?: any): Promise<Paginate<IShop>> =>
@@ -24,6 +22,12 @@ const shopService = {
     request.get(`/rest/shop/delivery-zone/check/distance`, { params }),
   checkZoneById: (id: number, params?: any) =>
     request.get(`/rest/shop/${id}/delivery-zone/check/distance`, { params }),
+  checkCommunityZone: (data: any) =>
+    request.post(`/rest/community-zones/check`, data),
+  getCommunityZones: () =>
+    request.get(`/rest/community-zones`),
+  getCommunityZoneFarms: (id: number) =>
+    request.get(`/rest/community-zones/${id}/farms`),
   getByIdReviews: (id: number, params?: any): Promise<Paginate<ShopReview>> =>
     request.get(`/rest/shops/${id}/reviews`, { params }),
   getAllBranches: (params?: any):Promise<Paginate<IBranch>> => request.get(`/rest/branches`, {params})

@@ -48,11 +48,12 @@ export default function ShopsPage() {
   );
 
   const { isSuccess: isInsideZone, isLoading: isZoneLoading } = useQuery(
-    ["shopZones", location],
+    ["communityZones", location],
     () =>
-      shopService.checkZone({
+      shopService.checkCommunityZone({
         address: location,
-      })
+      }),
+    { retry: false },
   );
 
   const {
@@ -74,21 +75,20 @@ export default function ShopsPage() {
       query?.verfiy,
     ],
     ({ pageParam = 1 }) =>
-      shopService.getAllShops(
+      shopService.getAllFarms(
         qs.stringify({
           page: pageParam,
           perPage: PER_PAGE,
-          category_id: category_id ?? undefined,
+          category_id: category_id || undefined,
           order_by: newest ? "new" : order_by,
           free_delivery: group.free_delivery,
           take: group.tag,
           rating: group.rating?.split(","),
           prices: group.prices,
           address: location,
-          open: Number(group.open) || undefined,
+          open: 1,
           deals: group.deals,
-          verify: query?.verify,
-        })
+        }),
       ),
     {
       getNextPageParam: (lastPage: any) => {

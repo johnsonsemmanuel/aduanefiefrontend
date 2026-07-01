@@ -66,7 +66,7 @@ export default function BeSellerContainer({ children }: Props) {
       images: ["", ""],
       user_id: user?.id,
       location: latlng,
-      type: "shop",
+      type: "farm",
       documents: [],
     },
     onSubmit: (values: ShopFormType) => {

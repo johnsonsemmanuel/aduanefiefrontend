@@ -10,23 +10,11 @@ type Props = {
 
 export default function ShopFormTypeTabs({ formik }: Props) {
   const { t } = useTranslation();
-  const { type } = formik.values;
 
   return (
     <div className={cls.tabs}>
-      <button
-        type="button"
-        className={`${cls.tab} ${type === "farm" ? cls.active : ""}`}
-        onClick={() => formik.setFieldValue("type", "farm")}
-      >
+      <button type="button" className={`${cls.tab} ${cls.active}`}>
         <span className={cls.text}>{t("farm")}</span>
-      </button>
-      <button
-        type="button"
-        className={`${cls.tab} ${type === "shop" ? cls.active : ""}`}
-        onClick={() => formik.setFieldValue("type", "shop")}
-      >
-        <span className={cls.text}>{t("shop")}</span>
       </button>
     </div>
   );

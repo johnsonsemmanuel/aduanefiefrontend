@@ -66,7 +66,7 @@ export default function Homev4() {
   const { data: brandShops, isLoading: brandShopLoading } = useQuery(
     ["brandshops", locale, location],
     () =>
-      shopService.getAllShops(
+      shopService.getAllFarms(
         qs.stringify({ verify: "1", address: location, open: "1" }),
       ),
   );
@@ -91,7 +91,7 @@ export default function Homev4() {
   } = useInfiniteQuery(
     ["nearbyshops", locale, location],
     ({ pageParam = 1 }) =>
-      shopService.getAllShops(
+      shopService.getAllFarms(
         qs.stringify({
           page: pageParam,
           address: location,

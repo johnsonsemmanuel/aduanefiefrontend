@@ -48,11 +48,12 @@ export default function ShopsPage() {
   );
 
   const { isSuccess: isInsideZone, isLoading: isZoneLoading } = useQuery(
-    ["shopZones", location],
+    ["communityZones", location],
     () =>
-      shopService.checkZone({
+      shopService.checkCommunityZone({
         address: location,
-      })
+      }),
+    { retry: false },
   );
 
   const {
@@ -74,7 +75,7 @@ export default function ShopsPage() {
       query?.verfiy,
     ],
     ({ pageParam = 1 }) =>
-      shopService.getAllShops(
+      shopService.getAllFarms(
         qs.stringify({
           page: pageParam,
           perPage: PER_PAGE,
