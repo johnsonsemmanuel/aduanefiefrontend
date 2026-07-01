@@ -14,13 +14,9 @@ export default function ReferralTerms({}: Props) {
   const { t, i18n } = useTranslation();
   const locale = i18n.language;
 
-  const { data, error } = useQuery(["referral-terms", locale], () =>
-    informationService.getReferrals(),
+  const { data } = useQuery(["referral-terms", locale], () =>
+    informationService.getReferrals().catch(() => null),
   );
-
-  if (error) {
-    console.log("error => ", error);
-  }
 
   return (
     <>

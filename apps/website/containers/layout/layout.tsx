@@ -60,8 +60,9 @@ export default function Layout({ children, locale }: LayoutProps) {
   const router = useRouter();
   const isShopDetailPage = router.pathname.startsWith("/shop/");
 
-  useQuery("currencies", () => currencyService.getAll(), {
+  useQuery("currencies", () => currencyService.getAll().catch(() => null), {
     onSuccess: (data) => {
+      if (!data) return;
       const activeCurrency = data.data.find((item: Currency) => item.default);
       const savedCurrency = data.data.find(
         (item: Currency) => item.id === currency?.id,
@@ -75,8 +76,9 @@ export default function Layout({ children, locale }: LayoutProps) {
     },
   });
 
-  useQuery("settings", () => informationService.getSettings(), {
+  useQuery("settings", () => informationService.getSettings().catch(() => null), {
     onSuccess: (data) => {
+      if (!data) return;
       const obj = createSettings(data.data);
       updateSettings(generateSettings(obj));
     },

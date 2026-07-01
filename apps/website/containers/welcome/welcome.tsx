@@ -18,8 +18,9 @@ export default function WelcomeContainer({ children }: Props) {
   const { isDarkMode } = useContext(ThemeContext);
   const { updateSettings } = useSettings();
 
-  useQuery("settings", () => informationService.getSettings(), {
+  useQuery("settings", () => informationService.getSettings().catch(() => null), {
     onSuccess: (data) => {
+      if (!data) return;
       const obj = createSettings(data.data);
       updateSettings(generateSettings(obj));
     },

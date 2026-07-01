@@ -159,7 +159,7 @@ export default function ExtendedApp({
 ExtendedApp.getInitialProps = async (appContext: any) => {
   const appProps = await App.getInitialProps(appContext);
   const { req } = appContext.ctx;
-  const userAgent = req ? req.headers["user-agent"] : navigator.userAgent;
+  const userAgent = req ? req.headers["user-agent"] : typeof navigator !== "undefined" ? navigator.userAgent : "";
   const appTheme = getPackerie("theme", appContext.ctx);
   const appDirection = getPackerie("dir", appContext.ctx);
   const authState = getPackerie("user", appContext.ctx);
