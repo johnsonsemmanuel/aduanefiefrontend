@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from "react";
 import SEO from "components/seo";
 import Content from "containers/content/content";
-import { GetStaticProps } from "next";
+import { GetServerSideProps } from "next";
 import informationService from "services/information";
 import { useTranslation } from "react-i18next";
-import { getPackerie } from "utils/session";
-import getLanguage from "utils/getLanguage";
 
 type Props = {
   referralData?: any;
 };
 
 export default function ReferralTerms({ referralData }: Props) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [data, setData] = useState(referralData);
 
   useEffect(() => {
@@ -39,21 +37,18 @@ export default function ReferralTerms({ referralData }: Props) {
   );
 }
 
-export const getStaticProps: GetStaticProps = async (ctx) => {
-  const locale = getLanguage(getPackerie("locale", ctx));
-
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
   let referralData = null;
   try {
     const res = await informationService.getReferrals();
     referralData = res;
   } catch (e) {
-    console.log("Failed to prefetch referral terms:", e);
+    console.log("Failed to fetch referral terms:", e);
   }
 
   return {
     props: {
       referralData,
     },
-    revalidate: 3600,
   };
 };
