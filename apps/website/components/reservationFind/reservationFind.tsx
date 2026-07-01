@@ -69,7 +69,7 @@ export default function ReservationFind({ handleClose }: Props) {
       }).finally(() => setSubmitting(true));
     },
     validate: (values: formValues) => {
-      const errors: formValues = {};
+      const errors: Record<string, string> = {};
       if (!values.date) {
         errors.date = t("required");
       }

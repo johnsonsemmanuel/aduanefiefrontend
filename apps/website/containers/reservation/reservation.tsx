@@ -117,7 +117,7 @@ export default function Reservation({ data }: Props) {
       console.log("values => ", values);
     },
     validate: (values: formValues) => {
-      const errors: formValues = {};
+      const errors: Record<string, string> = {};
       if (!values.date) {
         errors.date = t("required");
       }
